@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시네마 드림 · 활동지</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+  font-family:'Noto Sans KR', sans-serif;
+  background:#707070;
+  display:flex; flex-direction:column;
+  align-items:center;
+  padding:28px 0; gap:22px;
+}
+
+.page{
+  width:794px;
+  height:1123px;
+  min-height:1123px;
+  max-height:1123px;
+  background:#fff;
+  padding:44px 46px 36px 46px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ── 헤더 ── */
+.hd{
+  display:flex; align-items:center; gap:11px;
+  border-bottom:3px solid #1a1a2e;
+  padding-bottom:8px;
+  flex-shrink:0;
+}
+.hd-bar{ width:6px; background:#1a1a2e; border-radius:3px; flex-shrink:0; align-self:stretch; }
+.hd-left{ flex:1; }
+.hd-sub{ font-size:9px; font-weight:700; color:#aaa; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:2px; }
+.hd-title{ font-size:20px; font-weight:900; color:#1a1a2e; line-height:1; }
+.hd-title small{ font-size:12px; font-weight:400; color:#999; margin-left:8px; }
+.hd-right{
+  display:flex; align-items:center; gap:16px; flex-shrink:0;
+}
+.mr{ display:flex; align-items:center; gap:6px; }
+.ml{ font-size:11px; font-weight:900; color:#555; white-space:nowrap; }
+.mline{ width:100px; border-bottom:1.5px solid #aaa; height:16px; }
+
+/* ── 섹션 ── */
+.sec{
+  background:#f5f4f0;
+  border-radius:7px;
+  padding:8px 12px;
+  border-left:5px solid #C9A84C;
+  flex-shrink:0;
+}
+.st{
+  font-size:11px; font-weight:900; color:#1a1a2e;
+  margin-bottom:6px;
+  display:flex; align-items:center; gap:7px;
+}
+.sn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:19px; height:19px;
+  background:#1a1a2e; color:#fff;
+  border-radius:50%; font-size:9px; font-weight:900; flex-shrink:0;
+}
+.sd{ font-size:9px; color:#bbb; font-weight:400; margin-left:1px; }
+
+/* ── 정보 그리드 ── */
+.info-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
+.ic{
+  background:#fff; border:1px solid #e5e5d5; border-radius:5px;
+  padding:5px 9px; display:flex; flex-direction:column; gap:1px;
+}
+.ik{ font-size:9px; color:#C9A84C; font-weight:700; }
+.iv{ font-size:11px; color:#1a1a2e; font-weight:700; }
+
+/* ── 줄거리 ── */
+.story-box{
+  background:#fff; border:1px solid #e8e5d5; border-radius:6px;
+  padding:8px 12px;
+  font-size:11px; color:#333; line-height:1.9;
+}
+.hi{ font-weight:900; color:#1a1a2e; background:#f0ead0; border-radius:2px; padding:0 3px; }
+
+/* ── 태그 ── */
+.tag-row{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+.tl{ font-size:9px; color:#bbb; font-weight:700; white-space:nowrap; }
+.tag{
+  font-size:11px; font-weight:700;
+  padding:3px 11px; border-radius:14px;
+  border:1.5px solid #d4c090; background:#fff; color:#444;
+  cursor:pointer; user-select:none;
+  transition:background .1s, color .1s;
+}
+.tag:hover{ background:#f5efd0; border-color:#C9A84C; }
+.tag.on{ background:#1a1a2e; border-color:#1a1a2e; color:#F0D080; }
+
+/* ── 빈칸 ── */
+.fl{ display:flex; flex-direction:column; gap:5px; }
+.fi{
+  background:#fff; border:1px solid #e8e5d5; border-radius:6px;
+  padding:6px 11px; display:flex; flex-direction:column; gap:5px;
+}
+.fq{ display:flex; align-items:baseline; gap:5px; font-size:11px; color:#222; line-height:1.8; flex-wrap:wrap; }
+.fn{ font-weight:900; color:#555; min-width:14px; font-size:11px; flex-shrink:0; }
+.bd{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:72px; height:20px;
+  border-bottom:2px solid #C9A84C;
+  background:#fdf9ef; border-radius:3px;
+  font-size:10px; font-weight:700; color:#444;
+  margin:0 2px; cursor:pointer; vertical-align:middle;
+  transition:background .1s;
+}
+.bd.on{ background:#f0ead0; border-color:#1a1a2e; color:#1a1a2e; }
+.fc{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+
+/* ── OX 퀴즈 ── */
+.ql{ display:flex; flex-direction:column; gap:4px; }
+.qi{
+  background:#fff; border:1px solid #e8e5d5; border-radius:6px;
+  padding:6px 11px; display:flex; align-items:center; gap:9px;
+}
+.qn{ font-size:10px; font-weight:900; color:#C9A84C; min-width:14px; }
+.qt{ font-size:11px; color:#222; flex:1; line-height:1.45; }
+.oxb{ display:flex; gap:3px; flex-shrink:0; }
+.ob{
+  width:30px; height:24px;
+  border:1.5px solid #ccc; border-radius:4px; background:#fafafa;
+  font-size:12px; font-weight:900; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  color:#ccc; transition:all .1s;
+}
+.ob:hover{ background:#eee; }
+.ob.so{ background:#1a1a2e; border-color:#1a1a2e; color:#F0D080; }
+.ob.sx{ background:#7a5a2e; border-color:#7a5a2e; color:#fff; }
+
+/* ── 캐릭터 그리드 ── */
+.cg{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.cc{
+  background:#fff; border:1px solid #e8e5d5; border-radius:6px;
+  padding:7px 9px; display:flex; flex-direction:column; gap:3px;
+}
+.cn{ font-size:12px; font-weight:900; color:#1a1a2e; }
+.cp{ font-size:9px; font-weight:700; background:#f0ead0; color:#7a5a2e; border-radius:3px; padding:1px 6px; width:fit-content; }
+.cl{ font-size:9px; color:#bbb; }
+.ctags{ display:flex; flex-wrap:wrap; gap:3px; }
+
+/* ── 순서 배열 ── */
+.ord-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.oc{
+  background:#fff; border:1.5px dashed #d4c090; border-radius:8px;
+  padding:9px 10px; text-align:center; cursor:pointer;
+  display:flex; flex-direction:column; gap:5px; transition:border-color .2s;
+}
+.oc:hover{ border-color:#C9A84C; background:#fdf9ef; }
+.on-num{
+  width:28px; height:28px; border-radius:50%; border:2px solid #C9A84C;
+  background:#fdf9ef; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900; color:transparent;
+  margin:0 auto; transition:.2s;
+}
+.on-num.show{ color:#1a1a2e; background:#f0ead0; }
+.oc-txt{ font-size:10px; color:#444; line-height:1.55; }
+
+/* ── 명대사 카드 ── */
+.qcard{
+  background:#fff; border:1px solid #e8e5d5;
+  border-left:5px solid #C9A84C; border-radius:6px;
+  padding:8px 12px;
+}
+.qtext{ font-size:11px; color:#333; font-style:italic; line-height:1.8; }
+.qby{ font-size:9px; color:#bbb; font-weight:700; text-align:right; margin-top:3px; }
+.qq{ font-size:10px; font-weight:700; color:#C9A84C; margin:5px 0 4px; }
+
+/* ── 쓰기 라인 ── */
+.wlines{ display:flex; flex-direction:column; }
+.wl   { border-bottom:1px solid #e8e5d5; height:24px; width:100%; }
+.wl-md{ border-bottom:1px solid #e5e0d0; height:28px; width:100%; }
+.wl-es{ border-bottom:1px solid #e0dbc8; height:40px; width:100%; }
+
+/* ── 생각해봐요 ── */
+.thcard{ background:#fff; border:1px solid #e8e5d5; border-radius:6px; padding:8px 11px; }
+.thq{ font-size:11px; font-weight:700; color:#1a1a2e; line-height:1.55; margin-bottom:6px; }
+.thhint{ font-size:9px; color:#bbb; margin-bottom:4px; }
+
+/* ── 꿈 다짐 박스 ── */
+.rbbox{
+  border:2px dashed #C9A84C; border-radius:8px; background:#fdf9ef;
+  padding:9px 12px; display:flex; flex-direction:column; gap:6px;
+  flex-shrink:0;
+}
+.rbtitle{ font-size:12px; font-weight:900; color:#1a1a2e; }
+.rbhint{ font-size:10px; color:#888; line-height:1.6; }
+
+/* ── tip 박스 ── */
+.tipbox{
+  background:#f5f4f0; border:1px solid #e8e5d5; border-radius:5px;
+  padding:6px 11px; font-size:10px; color:#888; line-height:1.65;
+  flex-shrink:0;
+}
+.tipbox strong{ color:#1a1a2e; font-weight:700; }
+
+/* ── 자기평가 ── */
+.evrow{
+  display:flex; align-items:center;
+  background:#fff; border:1px solid #e8e5d5;
+  border-radius:5px; padding:6px 11px; gap:9px;
+}
+.evtxt{ font-size:11px; color:#222; flex:1; }
+.srow{ display:flex; gap:4px; }
+.sbtn{
+  width:19px; height:19px;
+  border:1.5px solid #d4c090; border-radius:50%; background:#fdf9ef;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all .1s;
+}
+.sbtn:hover{ background:#f0ead0; }
+.sbtn.lit{ background:#1a1a2e; border-color:#1a1a2e; }
+.sbtn.lit::after{ content:'★'; font-size:9px; color:#F0D080; }
+.sbtn:not(.lit)::after{ content:'☆'; font-size:9px; color:#C9A84C; }
+
+/* ── 페이지 번호 ── */
+.pn{
+  position:absolute; bottom:14px; right:46px;
+  font-size:9px; color:#ccc; font-weight:600;
+}
+
+/* ── 인쇄 ── */
+@media print{
+  body{ background:#fff; padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always;
+    margin:0; width:210mm; height:297mm;
+    padding:12mm 12mm 10mm 12mm;
+  }
+  @page{ size:A4 portrait; margin:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ████  PAGE 1  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마 드림 · Cinema Dream · 2023</div>
+      <div class="hd-title">⚽ 드림 <small>Dream · 영화 활동지</small></div>
+    </div>
+    <div class="hd-right">
+      <div class="mr"><span class="ml">학번</span><div class="mline"></div></div>
+      <div class="mr"><span class="ml">이름</span><div class="mline"></div></div>
+    </div>
+  </div>
+
+  <!-- ① 영화 기본 정보 -->
+  <div class="sec">
+    <div class="st"><span class="sn">1</span> 영화 기본 정보 <span class="sd">아래 정보를 함께 읽어보세요</span></div>
+    <div class="info-grid">
+      <div class="ic"><span class="ik">🎬 감독</span><span class="iv">이병헌</span></div>
+      <div class="ic"><span class="ik">📅 개봉일</span><span class="iv">2023년 4월 26일</span></div>
+      <div class="ic"><span class="ik">⏱ 상영시간</span><span class="iv">125분</span></div>
+      <div class="ic"><span class="ik">🎭 장르</span><span class="iv">스포츠 코미디 드라마</span></div>
+      <div class="ic"><span class="ik">⚽ 주연</span><span class="iv">박서준 (윤홍대)</span></div>
+      <div class="ic"><span class="ik">🎥 주연</span><span class="iv">아이유 (이소민)</span></div>
+      <div class="ic"><span class="ik">📖 바탕</span><span class="iv">2010년 홈리스 월드컵 실화</span></div>
+      <div class="ic"><span class="ik">🏆 관람등급</span><span class="iv">12세 이상</span></div>
+    </div>
+  </div>
+
+  <!-- ② 줄거리 -->
+  <div class="sec">
+    <div class="st"><span class="sn">2</span> 줄거리 읽기 <span class="sd">아래 내용을 읽고 다음 활동을 해보세요</span></div>
+    <div class="story-box">
+      프로 축구 선수 <span class="hi">윤홍대(박서준)</span>는 홧김에 기자를 폭행한 사건으로 이미지가 바닥을 치고,
+      사회봉사 명령의 일환으로 <span class="hi">홈리스 풋볼 월드컵</span> 국가대표팀의 감독을 맡게 됩니다.
+      처음에는 하기 싫었지만, 어쩔 수 없이 맡게 된 홍대.
+      여기에 열정이라고는 찾아볼 수 없는 현실파 <span class="hi">PD 이소민(아이유)</span>이 다큐멘터리 촬영을 위해 합류합니다.
+      운동이라고는 해본 적 없는 <span class="hi">노숙인 선수들</span>은 제각각 사연을 갖고 있지만,
+      연습은 엉망이고 팀워크는 더더욱 없습니다.
+      그러나 홍대는 이들과 함께 <span class="hi">헝가리 홈리스 월드컵</span>에 출전하는 도전에 나서고,
+      이들의 여정은 웃음과 감동 속에 펼쳐집니다.
+    </div>
+  </div>
+
+  <!-- ③ 빈칸 채우기 -->
+  <div class="sec">
+    <div class="st"><span class="sn">3</span> 빈칸 채우기 <span class="sd">보기를 클릭하면 빈칸에 들어가요!</span></div>
+    <div class="fl">
+      <div class="fi">
+        <div class="fq"><span class="fn">①</span>윤홍대는 프로 <span class="bd" id="b1">　　　</span> 선수였으나 기자 폭행으로 이미지가 추락했다.</div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag" onclick="fill('b1',this,'g1')">축구</span>
+          <span class="tag" onclick="fill('b1',this,'g1')">야구</span>
+          <span class="tag" onclick="fill('b1',this,'g1')">농구</span>
+        </div>
+      </div>
+      <div class="fi">
+        <div class="fq"><span class="fn">②</span>홍대는 사회봉사로 <span class="bd" id="b2">　　　　　</span> 국가대표 감독을 맡게 된다.</div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag" onclick="fill('b2',this,'g2')">홈리스 풋볼 월드컵</span>
+          <span class="tag" onclick="fill('b2',this,'g2')">청소년 축구</span>
+          <span class="tag" onclick="fill('b2',this,'g2')">장애인 스포츠</span>
+        </div>
+      </div>
+      <div class="fi">
+        <div class="fq"><span class="fn">③</span>이소민(아이유)의 직업은 <span class="bd" id="b3">　　</span>이며, 이 팀을 <span class="bd" id="b4">　　　　</span> 하러 합류한다.</div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag" onclick="fill('b3',this,'g3a')">PD</span>
+          <span class="tag" onclick="fill('b3',this,'g3a')">기자</span>
+          <span class="tag" onclick="fill('b3',this,'g3a')">감독</span>
+          <span class="tag" onclick="fill('b4',this,'g3b')">다큐 촬영</span>
+          <span class="tag" onclick="fill('b4',this,'g3b')">코치 지원</span>
+          <span class="tag" onclick="fill('b4',this,'g3b')">자원봉사</span>
+        </div>
+      </div>
+      <div class="fi">
+        <div class="fq"><span class="fn">④</span>대회 개최 장소는 <span class="bd" id="b5">　　　</span>이고, 이 영화는 <span class="bd" id="b6">　　　</span>년 실화를 바탕으로 한다.</div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag" onclick="fill('b5',this,'g4a')">헝가리</span>
+          <span class="tag" onclick="fill('b5',this,'g4a')">브라질</span>
+          <span class="tag" onclick="fill('b5',this,'g4a')">독일</span>
+          <span class="tag" onclick="fill('b6',this,'g4b')">2010</span>
+          <span class="tag" onclick="fill('b6',this,'g4b')">2018</span>
+          <span class="tag" onclick="fill('b6',this,'g4b')">2022</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ OX 퀴즈 -->
+  <div class="sec">
+    <div class="st"><span class="sn">4</span> OX 퀴즈 <span class="sd">O 또는 X 버튼을 눌러 선택하세요</span></div>
+    <div class="ql">
+      <div class="qi"><span class="qn">1</span><span class="qt">윤홍대는 자원해서 홈리스 월드컵 감독직을 맡았다.</span><div class="oxb"><button class="ob" onclick="ox(this,'o')">O</button><button class="ob" onclick="ox(this,'x')">X</button></div></div>
+      <div class="qi"><span class="qn">2</span><span class="qt">이소민은 이 팀의 다큐멘터리를 찍기 위해 합류한 PD이다.</span><div class="oxb"><button class="ob" onclick="ox(this,'o')">O</button><button class="ob" onclick="ox(this,'x')">X</button></div></div>
+      <div class="qi"><span class="qn">3</span><span class="qt">이 영화는 2010년 대한민국이 첫 출전한 홈리스 월드컵 실화를 바탕으로 한다.</span><div class="oxb"><button class="ob" onclick="ox(this,'o')">O</button><button class="ob" onclick="ox(this,'x')">X</button></div></div>
+      <div class="qi"><span class="qn">4</span><span class="qt">홈리스 월드컵 선수들은 모두 프로 축구 출신이다.</span><div class="oxb"><button class="ob" onclick="ox(this,'o')">O</button><button class="ob" onclick="ox(this,'x')">X</button></div></div>
+      <div class="qi"><span class="qn">5</span><span class="qt">감독 이병헌은 영화 '극한직업'을 연출한 감독과 동일인물이다.</span><div class="oxb"><button class="ob" onclick="ox(this,'o')">O</button><button class="ob" onclick="ox(this,'x')">X</button></div></div>
+    </div>
+  </div>
+
+  <div class="pn">1 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 2  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마 드림 · Cinema Dream · 2023</div>
+      <div class="hd-title">⚽ 드림 <small>등장인물 &amp; 이야기 순서</small></div>
+    </div>
+  </div>
+
+  <!-- ⑤ 등장인물 -->
+  <div class="sec">
+    <div class="st"><span class="sn">5</span> 등장인물 알아보기 <span class="sd">알맞은 특징을 클릭해서 선택하세요 (중복 가능)</span></div>
+    <div class="cg">
+      <div class="cc">
+        <div class="cn">윤홍대</div>
+        <div class="cp">주인공 · 감독 / 박서준</div>
+        <div class="cl">이 인물의 특징은?</div>
+        <div class="ctags">
+          <span class="tag" onclick="tog(this)">프로 축구선수 출신</span>
+          <span class="tag" onclick="tog(this)">기자 폭행 사건</span>
+          <span class="tag" onclick="tog(this)">마지못해 감독 수락</span>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cn">이소민</div>
+        <div class="cp">여주인공 · PD / 아이유</div>
+        <div class="cl">이 인물의 특징은?</div>
+        <div class="ctags">
+          <span class="tag" onclick="tog(this)">열정 없는 현실파</span>
+          <span class="tag" onclick="tog(this)">다큐 촬영 합류</span>
+          <span class="tag" onclick="tog(this)">냉소적이지만 성실</span>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cn">홈리스 선수단</div>
+        <div class="cp">조연 / 김종수·고창석 外</div>
+        <div class="cl">이 인물들의 특징은?</div>
+        <div class="ctags">
+          <span class="tag" onclick="tog(this)">각자 사연 보유</span>
+          <span class="tag" onclick="tog(this)">축구 경험 없음</span>
+          <span class="tag" onclick="tog(this)">팀워크 부재</span>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cn">전효봉</div>
+        <div class="cp">노숙인 선수 / 고창석</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag" onclick="tog(this)">딸과의 애틋한 부녀</span>
+          <span class="tag" onclick="tog(this)">감초 역할</span>
+          <span class="tag" onclick="tog(this)">웃음 담당</span>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cn">박성찬</div>
+        <div class="cp">특별 출연 / 강하늘</div>
+        <div class="cl">이 인물의 특징은?</div>
+        <div class="ctags">
+          <span class="tag" onclick="tog(this)">유명 프로 선수</span>
+          <span class="tag" onclick="tog(this)">홍대의 과거 동료</span>
+          <span class="tag" onclick="tog(this)">카메오 출연</span>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cn">💬 내가 가장 인상 깊은 인물은?</div>
+        <div class="cp">한 명만 선택하세요</div>
+        <div class="ctags" style="margin-top:5px;">
+          <span class="tag" onclick="single(this)">윤홍대</span>
+          <span class="tag" onclick="single(this)">이소민</span>
+          <span class="tag" onclick="single(this)">전효봉</span>
+          <span class="tag" onclick="single(this)">홈리스 선수단</span>
+          <span class="tag" onclick="single(this)">박성찬</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ 이야기 순서 배열 -->
+  <div class="sec">
+    <div class="st"><span class="sn">6</span> 이야기 순서 배열 <span class="sd">원 안에 숫자가 나타나요 — 클릭해서 순서를 맞춰보세요</span></div>
+    <div class="ord-grid">
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on1">③</div>
+        <div class="oc-txt">홈리스 선수들과 함께 훈련을 시작하지만 팀워크는 엉망이다.</div>
+      </div>
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on2">①</div>
+        <div class="oc-txt">프로 축구선수 윤홍대가 기자 폭행 사건으로 이미지가 추락한다.</div>
+      </div>
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on3">⑤</div>
+        <div class="oc-txt">대회에 출전해 각 나라 팀들과 경기를 펼치며 성장해 나간다.</div>
+      </div>
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on4">②</div>
+        <div class="oc-txt">사회봉사 명령으로 홈리스 월드컵 감독을 마지못해 맡게 된다.</div>
+      </div>
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on5">④</div>
+        <div class="oc-txt">갈등을 겪으면서도 선수들과 서로를 이해하며 하나가 되어간다.</div>
+      </div>
+      <div class="oc" onclick="togOrd(this)">
+        <div class="on-num" id="on6">⑥</div>
+        <div class="oc-txt">홈리스 선수들이 꿈을 향해 나아가는 감동적인 결말을 맞이한다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 홈리스 월드컵 알아보기 -->
+  <div class="sec">
+    <div class="st"><span class="sn">7</span> 홈리스 월드컵이란? <span class="sd">영상과 설명을 보고 알맞은 것을 선택하세요</span></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+      <div class="thcard">
+        <div class="thq">Q1. 홈리스 월드컵은 어떤 대회일까요?</div>
+        <div class="tag-row">
+          <span class="tag" onclick="single(this)">노숙인들이 참가하는 국제 축구 대회</span>
+          <span class="tag" onclick="single(this)">어린이 축구 국제 대회</span>
+          <span class="tag" onclick="single(this)">아마추어 프리랜서 대회</span>
+        </div>
+      </div>
+      <div class="thcard">
+        <div class="thq">Q2. 대한민국이 처음 홈리스 월드컵에 출전한 연도는?</div>
+        <div class="tag-row">
+          <span class="tag" onclick="single(this)">2010년</span>
+          <span class="tag" onclick="single(this)">2014년</span>
+          <span class="tag" onclick="single(this)">2018년</span>
+        </div>
+      </div>
+      <div class="thcard" style="grid-column:span 2;">
+        <div class="thq">Q3. 이 영화를 통해 '노숙인'에 대한 나의 생각이 어떻게 달라졌나요? (해당하는 것을 모두 선택)</div>
+        <div class="tag-row">
+          <span class="tag" onclick="tog(this)">그들도 꿈을 가질 수 있다</span>
+          <span class="tag" onclick="tog(this)">도움이 필요한 이웃이다</span>
+          <span class="tag" onclick="tog(this)">사연이 있는 사람들이다</span>
+          <span class="tag" onclick="tog(this)">달라진 게 없다</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pn">2 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 3  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마 드림 · Cinema Dream · 2023</div>
+      <div class="hd-title">⚽ 드림 <small>명대사 &amp; 생각 넓히기</small></div>
+    </div>
+  </div>
+
+  <!-- ⑧ 명대사 -->
+  <div class="sec">
+    <div class="st"><span class="sn">8</span> 영화 속 명대사 <span class="sd">알맞은 뜻을 클릭해서 선택하세요</span></div>
+
+    <div class="qcard" style="margin-bottom:6px;">
+      <div class="qtext">"꿈이 있으면 도전해야 합니다. 지금 어디에 있든 상관없어요."</div>
+      <div class="qby">— 윤홍대 감독</div>
+      <div class="qq">이 대사가 전하는 핵심 메시지는?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">현재 상황과 관계없이 꿈을 향해 도전할 수 있다</span>
+        <span class="tag" onclick="single(this)">노숙인은 꿈을 가질 자격이 없다</span>
+        <span class="tag" onclick="single(this)">돈이 있어야만 도전할 수 있다</span>
+      </div>
+    </div>
+
+    <div class="qcard" style="margin-bottom:6px;">
+      <div class="qtext">"결과보다 과정이 더 중요할 수 있어."</div>
+      <div class="qby">— 이소민 PD</div>
+      <div class="qq">이소민이 이 말을 한 이유는 무엇일까요?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">선수들의 도전 과정이 이미 가치 있다고 느꼈기 때문</span>
+        <span class="tag" onclick="single(this)">대회에서 꼭 이겨야 한다고 생각해서</span>
+        <span class="tag" onclick="single(this)">다큐 영상이 잘 나왔기 때문에</span>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qtext">"이번 한 번만, 제대로 한 번만 뛰어보자."</div>
+      <div class="qby">— 홈리스 선수들</div>
+      <div class="qq">이 대사에서 선수들이 원하는 것은?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">인생에서 단 한 번 진심을 다한 도전을 하고 싶다</span>
+        <span class="tag" onclick="single(this)">월드컵에서 반드시 우승하고 싶다</span>
+        <span class="tag" onclick="single(this)">다큐 방송에 나오고 싶다</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑨ 생각해봐요 -->
+  <div class="sec">
+    <div class="st"><span class="sn">9</span> 생각해봐요 <span class="sd">알맞은 보기를 클릭해서 선택하세요</span></div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q1. 윤홍대(박서준)가 처음엔 싫어했지만 결국 선수들과 하나가 될 수 있었던 이유는?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">선수들의 진심 어린 노력과 사연에 감동받아서</span>
+        <span class="tag" onclick="single(this)">대회에서 우승하면 상금을 받을 수 있어서</span>
+        <span class="tag" onclick="single(this)">어쩔 수 없이 시간을 보내다 보니까</span>
+      </div>
+    </div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q2. 이소민(아이유)이 차갑고 열정 없는 PD에서 변화하게 된 계기는? (해당하는 것을 모두 선택)</div>
+      <div class="thhint">💡 여러 가지를 선택할 수 있어요.</div>
+      <div class="tag-row">
+        <span class="tag" onclick="tog(this)">선수들의 삶에 진심으로 공감해서</span>
+        <span class="tag" onclick="tog(this)">도전하는 과정을 가까이서 목격해서</span>
+        <span class="tag" onclick="tog(this)">홍대의 진지함에 영향을 받아서</span>
+        <span class="tag" onclick="tog(this)">방송 시청률이 올라갈 것 같아서</span>
+      </div>
+    </div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q3. 영화에서 '드림(Dream)'이라는 제목이 뜻하는 것은 무엇일까요?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">소외된 사람도 꿈꿀 권리가 있다는 메시지</span>
+        <span class="tag" onclick="single(this)">잠을 자며 꾸는 꿈 이야기</span>
+        <span class="tag" onclick="single(this)">축구 기술 중 하나인 드림(Dream) 페인트</span>
+      </div>
+    </div>
+
+    <div class="thcard">
+      <div class="thq">Q4. 이 영화에서 가장 인상 깊었던 장면이나 메시지는 무엇인가요?</div>
+      <div class="tag-row">
+        <span class="tag" onclick="single(this)">엉망진창 첫 훈련 장면</span>
+        <span class="tag" onclick="single(this)">선수들의 사연이 드러나는 장면</span>
+        <span class="tag" onclick="single(this)">홍대가 선수들을 진심으로 응원하는 장면</span>
+        <span class="tag" onclick="single(this)">마지막 경기 장면</span>
+        <span class="tag" onclick="single(this)">홍대와 소민의 갈등 해소 장면</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pn">3 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 4  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마 드림 · Cinema Dream · 2023</div>
+      <div class="hd-title">⚽ 드림 <small>나의 드림 &amp; 감상문</small></div>
+    </div>
+  </div>
+
+  <!-- ⑩ 나의 드림 -->
+  <div class="rbbox">
+    <div class="rbtitle">⚽ 나만의 <strong>드림(Dream)</strong> — 나의 꿈과 도전은?</div>
+    <div class="rbhint">영화 속 홈리스 선수들처럼, 나도 지금 당장 이루기 어렵더라도 꿈꾸는 것이 있나요? 내 꿈과 그 꿈을 위해 실천할 수 있는 것을 써보세요.</div>
+    <div class="tag-row" style="margin-bottom:4px;">
+      <span class="tl">분야 →</span>
+      <span class="tag" onclick="tog(this)">진로·직업</span>
+      <span class="tag" onclick="tog(this)">스포츠</span>
+      <span class="tag" onclick="tog(this)">예술·창작</span>
+      <span class="tag" onclick="tog(this)">봉사·사회</span>
+      <span class="tag" onclick="tog(this)">학업</span>
+      <span class="tag" onclick="tog(this)">기타</span>
+    </div>
+    <div class="wlines">
+      <div class="wl-md"></div><div class="wl-md"></div>
+      <div class="wl-md"></div><div class="wl-md"></div>
+    </div>
+  </div>
+
+  <!-- ⑪ 감상문 -->
+  <div class="sec" style="flex:1; display:flex; flex-direction:column; gap:6px; min-height:0;">
+    <div class="st"><span class="sn">11</span> 영화 감상문 쓰기 <span class="sd">자유롭게 써보세요</span></div>
+    <div class="tipbox">
+      <strong>💡 순서 힌트</strong> &nbsp;
+      ① 영화 소개 &nbsp;→&nbsp; ② 가장 인상 깊은 장면 &nbsp;→&nbsp; ③ 기억나는 대사 &nbsp;→&nbsp; ④ 영화가 나에게 주는 메시지 &amp; 나의 다짐
+    </div>
+    <div class="wlines" style="flex:1; min-height:0;">
+      <div class="wl-es"></div><div class="wl-es"></div><div class="wl-es"></div>
+      <div class="wl-es"></div><div class="wl-es"></div><div class="wl-es"></div>
+      <div class="wl-es"></div><div class="wl-es"></div><div class="wl-es"></div>
+    </div>
+  </div>
+
+  <!-- ⑫ 자기평가 -->
+  <div class="sec" style="flex-shrink:0;">
+    <div class="st"><span class="sn">12</span> 스스로 평가해봐요 <span class="sd">동그라미를 눌러 별점을 선택하세요 ⭐</span></div>
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="evrow">
+        <span class="evtxt">영화의 줄거리와 등장인물을 잘 이해했다.</span>
+        <div class="srow" id="s1">
+          <div class="sbtn" onclick="star('s1',1)"></div><div class="sbtn" onclick="star('s1',2)"></div>
+          <div class="sbtn" onclick="star('s1',3)"></div><div class="sbtn" onclick="star('s1',4)"></div>
+          <div class="sbtn" onclick="star('s1',5)"></div>
+        </div>
+      </div>
+      <div class="evrow">
+        <span class="evtxt">홈리스 월드컵의 의미를 이해하고 사회적 약자에 대해 생각해보았다.</span>
+        <div class="srow" id="s2">
+          <div class="sbtn" onclick="star('s2',1)"></div><div class="sbtn" onclick="star('s2',2)"></div>
+          <div class="sbtn" onclick="star('s2',3)"></div><div class="sbtn" onclick="star('s2',4)"></div>
+          <div class="sbtn" onclick="star('s2',5)"></div>
+        </div>
+      </div>
+      <div class="evrow">
+        <span class="evtxt">영화의 메시지를 나의 꿈과 연결하여 자신의 생각을 표현했다.</span>
+        <div class="srow" id="s3">
+          <div class="sbtn" onclick="star('s3',1)"></div><div class="sbtn" onclick="star('s3',2)"></div>
+          <div class="sbtn" onclick="star('s3',3)"></div><div class="sbtn" onclick="star('s3',4)"></div>
+          <div class="sbtn" onclick="star('s3',5)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pn">4 / 4</div>
+</div>
+
+
+<script>
+function fill(blankId, clickedTag, group){
+  const fi = clickedTag.closest('.fi');
+  fi.querySelectorAll('.tag').forEach(t=>{
+    if((t.getAttribute('onclick')||'').includes(`'${group}'`)) t.classList.remove('on');
+  });
+  clickedTag.classList.add('on');
+  const el = document.getElementById(blankId);
+  el.textContent = clickedTag.textContent.trim();
+  el.classList.add('on');
+}
+function ox(btn,type){
+  btn.closest('.oxb').querySelectorAll('.ob').forEach(b=>b.classList.remove('so','sx'));
+  btn.classList.add(type==='o'?'so':'sx');
+}
+function tog(el){ el.classList.toggle('on'); }
+function single(el){
+  el.parentElement.querySelectorAll('.tag').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+function togOrd(item){
+  const n = item.querySelector('.on-num');
+  n.classList.toggle('show');
+}
+function star(rowId,n){
+  document.getElementById(rowId).querySelectorAll('.sbtn')
+    .forEach((s,i)=>i<n?s.classList.add('lit'):s.classList.remove('lit'));
+}
+</script>
+</body>
+</html>

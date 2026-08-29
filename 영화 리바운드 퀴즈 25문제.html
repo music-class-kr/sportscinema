@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏀 리바운드 퀴즈 25문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100vw;height:100vh;overflow:hidden;font-family:'Noto Sans KR',sans-serif;}
+body{background:#0a0a1e;}
+
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+#prog-wrap{position:fixed;top:0;left:0;width:100%;height:6px;background:rgba(255,255,255,.12);z-index:999;}
+#prog-bar{height:6px;background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff);transition:width .5s ease;}
+
+.nb{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.35);
+  color:#fff;font-size:clamp(18px,2.5vw,30px);
+  width:clamp(46px,5.5vw,66px);height:clamp(46px,5.5vw,66px);
+  border-radius:50%;cursor:pointer;z-index:999;
+  transition:all .3s;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+}
+.nb:hover{background:rgba(255,255,255,.25);transform:translateY(-50%) scale(1.12);}
+#np{left:clamp(8px,1.5vw,20px);}
+#nn{right:clamp(8px,1.5vw,20px);}
+
+#qnum{
+  position:fixed;bottom:18px;right:22px;
+  color:rgba(255,255,255,.55);font-size:clamp(12px,1.5vw,17px);
+  z-index:999;font-weight:700;
+}
+#dots{
+  position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;flex-wrap:wrap;justify-content:center;
+  z-index:999;max-width:88vw;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:all .3s;border:1.5px solid rgba(255,255,255,.45);}
+.dot.on{background:#ffd93d;transform:scale(1.4);border-color:#ffd93d;}
+
+.deck{width:100vw;height:100vh;position:relative;}
+.slide{
+  position:absolute;inset:0;
+  width:100vw;height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:5vh 7vw;
+  transform:translateX(100%);
+  transition:transform .5s cubic-bezier(.77,0,.18,1);
+  overflow:hidden;z-index:1;
+}
+.slide.active{transform:translateX(0);}
+.slide.prev{transform:translateX(-100%);}
+
+.bg-a{background:linear-gradient(145deg,#0a0a2e,#1a0a4e,#2d0a6e);}
+.bg-b{background:linear-gradient(145deg,#071e3d,#0d3b6e,#1a5fa0);}
+.bg-c{background:linear-gradient(145deg,#1a0033,#4a0066,#7a00aa);}
+.bg-d{background:linear-gradient(145deg,#003322,#006644,#009966);}
+.bg-e{background:linear-gradient(145deg,#2a0000,#660000,#990000);}
+.bg-f{background:linear-gradient(145deg,#1a1100,#554400,#887700);}
+.bg-g{background:linear-gradient(145deg,#001133,#003399,#0055cc);}
+.bg-h{background:linear-gradient(145deg,#220011,#660033,#aa0055);}
+.bg-i{background:linear-gradient(145deg,#002211,#006633,#009955);}
+.bg-j{background:linear-gradient(145deg,#110022,#440066,#7700aa);}
+
+.dc{position:absolute;border-radius:50%;opacity:.1;pointer-events:none;}
+.dc1{width:520px;height:520px;background:radial-gradient(circle,#fff,transparent);top:-160px;right:-160px;}
+.dc2{width:340px;height:340px;background:radial-gradient(circle,#fff,transparent);bottom:-90px;left:-90px;}
+.dc3{width:220px;height:220px;background:radial-gradient(circle,#fff,transparent);top:30%;left:5%;}
+
+/* 커버 */
+.cover-emoji{font-size:clamp(56px,10vw,110px);margin-bottom:14px;}
+.cover-title{
+  font-size:clamp(36px,7vw,88px);font-weight:900;
+  background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-align:center;line-height:1.1;margin-bottom:10px;
+}
+.cover-sub{font-size:clamp(16px,2.5vw,32px);color:rgba(255,255,255,.75);font-weight:700;text-align:center;margin-bottom:26px;}
+.cover-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px;}
+.cover-tag{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:20px;padding:6px 18px;font-size:clamp(12px,1.5vw,18px);font-weight:700;backdrop-filter:blur(5px);}
+.start-btn{
+  padding:clamp(14px,2.2vh,22px) clamp(36px,5vw,60px);
+  border-radius:50px;border:none;
+  background:linear-gradient(135deg,#ff6b6b,#ffd93d);
+  color:#1a0a00;font-family:'Noto Sans KR',sans-serif;
+  font-size:clamp(18px,2.5vw,30px);font-weight:900;
+  cursor:pointer;transition:all .3s;
+  box-shadow:0 8px 30px rgba(255,107,107,.4);
+}
+.start-btn:hover{transform:scale(1.08);box-shadow:0 12px 40px rgba(255,107,107,.6);}
+
+/* 문제 공통 */
+.q-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);
+  border-radius:30px;padding:6px 20px;
+  font-size:clamp(13px,1.7vw,19px);font-weight:900;color:rgba(255,255,255,.85);
+  letter-spacing:2px;margin-bottom:clamp(12px,2vh,22px);
+  backdrop-filter:blur(8px);
+}
+.qcat{font-size:clamp(10px,1.2vw,14px);background:rgba(255,255,255,.15);border-radius:12px;padding:2px 10px;color:rgba(255,255,255,.7);}
+
+.q-text{
+  font-size:clamp(22px,3.8vw,50px);
+  font-weight:900;color:#fff;text-align:center;
+  line-height:1.35;max-width:920px;
+  margin-bottom:clamp(14px,2.5vh,30px);
+  text-shadow:0 2px 20px rgba(0,0,0,.5);
+}
+
+/* 일반 버튼 */
+.q-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:clamp(14px,2.2vh,26px);}
+.q-btn{
+  padding:clamp(12px,2vh,20px) clamp(24px,4vw,48px);
+  border-radius:50px;border:none;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:clamp(16px,2.2vw,26px);font-weight:900;
+  cursor:pointer;transition:all .3s;
+  display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(8px);user-select:none;
+}
+.btn-hint{background:rgba(255,217,61,.18);border:2px solid rgba(255,217,61,.6);color:#ffd93d;}
+.btn-hint:hover{background:rgba(255,217,61,.3);transform:scale(1.06);}
+.btn-hint:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-ans{background:rgba(107,203,119,.18);border:2px solid rgba(107,203,119,.6);color:#6bcb77;}
+.btn-ans:hover{background:rgba(107,203,119,.3);transform:scale(1.06);}
+.btn-ans:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+
+/* 힌트 박스 */
+.hint-box{
+  background:rgba(255,217,61,.12);
+  border:2px solid rgba(255,217,61,.45);
+  border-radius:20px;padding:clamp(10px,1.6vh,18px) clamp(18px,2.8vw,32px);
+  max-width:840px;width:100%;
+  font-size:clamp(14px,1.8vw,22px);color:#ffd93d;font-weight:700;
+  text-align:center;line-height:1.65;
+  backdrop-filter:blur(8px);
+  display:none;margin-bottom:10px;
+  animation:fadeUp .4s ease;
+}
+.hint-box.show{display:block;}
+
+/* 정답 박스 */
+.ans-box{
+  background:rgba(107,203,119,.13);
+  border:2px solid rgba(107,203,119,.5);
+  border-radius:20px;padding:clamp(12px,2vh,24px) clamp(20px,3.2vw,38px);
+  max-width:840px;width:100%;
+  text-align:center;backdrop-filter:blur(8px);
+  display:none;
+}
+.ans-box.show{display:block;animation:pop .5s ease;}
+.ans-main{
+  font-size:clamp(26px,4.5vw,58px);font-weight:900;
+  background:linear-gradient(90deg,#6bcb77,#4d96ff,#c77dff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1.2;margin-bottom:8px;
+}
+.ans-exp{font-size:clamp(12px,1.5vw,19px);color:rgba(255,255,255,.8);line-height:1.7;font-weight:400;}
+
+/* ════════════════════════════════════
+   객관식 전용 스타일 (Q10~Q15)
+════════════════════════════════════ */
+.mc-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(10px,1.5vw,18px);
+  max-width:860px;width:100%;
+  margin-bottom:clamp(12px,2vh,22px);
+}
+.mc-btn{
+  background:rgba(255,255,255,.08);
+  border:2px solid rgba(255,255,255,.25);
+  border-radius:16px;
+  padding:clamp(12px,1.8vh,20px) clamp(14px,2vw,28px);
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:clamp(14px,1.9vw,24px);
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+  transition:all .25s;
+  text-align:left;
+  display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(8px);
+  user-select:none;
+}
+.mc-btn:hover:not(:disabled){
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.55);
+  transform:translateY(-3px) scale(1.02);
+}
+.mc-btn:disabled{cursor:not-allowed;}
+.mc-btn .mc-num{
+  min-width:clamp(28px,3.5vw,42px);
+  height:clamp(28px,3.5vw,42px);
+  border-radius:50%;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(13px,1.6vw,20px);
+  font-weight:900;
+  flex-shrink:0;
+  transition:all .25s;
+}
+/* 정답 */
+.mc-btn.correct{
+  background:linear-gradient(135deg,rgba(107,203,119,.35),rgba(77,150,255,.25)) !important;
+  border-color:#6bcb77 !important;
+  animation:correctPop .5s ease;
+}
+.mc-btn.correct .mc-num{
+  background:#6bcb77;color:#003322;
+}
+/* 오답 */
+.mc-btn.wrong{
+  background:rgba(255,107,107,.25) !important;
+  border-color:#ff6b6b !important;
+  animation:shake .4s ease;
+}
+.mc-btn.wrong .mc-num{
+  background:#ff6b6b;color:#fff;
+}
+/* 나머지 흐리게 */
+.mc-btn.dimmed{
+  opacity:.38;
+  transform:none !important;
+}
+
+/* mc 하단 버튼 행 */
+.mc-bottom{
+  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:clamp(10px,1.8vh,20px);
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+@keyframes correctPop{0%{transform:scale(.95);}40%{transform:scale(1.07);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-10px);}40%{transform:translateX(10px);}60%{transform:translateX(-8px);}80%{transform:translateX(8px);}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* 마무리 */
+.end-emoji{font-size:clamp(60px,10vw,110px);margin-bottom:14px;}
+.end-title{
+  font-size:clamp(36px,6.5vw,80px);font-weight:900;
+  background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-align:center;margin-bottom:12px;
+}
+.end-sub{font-size:clamp(15px,2vw,26px);color:rgba(255,255,255,.75);text-align:center;font-weight:700;line-height:1.7;max-width:680px;}
+
+#fireworks{position:fixed;inset:0;pointer-events:none;z-index:998;overflow:hidden;}
+.confetti-piece{position:absolute;border-radius:3px;animation:confettiFall linear forwards;}
+</style>
+</head>
+<body>
+
+<div id="prog-wrap"><div id="prog-bar"></div></div>
+<button class="nb" id="np" onclick="go(-1)">&#8592;</button>
+<button class="nb" id="nn" onclick="go(1)">&#8594;</button>
+<div id="qnum"></div>
+<div id="dots"></div>
+<div id="fireworks"></div>
+<canvas id="stars"></canvas>
+
+<div class="deck" id="deck">
+
+<!-- ══ 0. 커버 ══ -->
+<section class="slide bg-a active" data-type="cover">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="cover-emoji">🏀</div>
+  <div class="cover-title">리바운드 퀴즈!</div>
+  <div class="cover-sub">영화 리바운드 · 총 25문제 도전 🎯</div>
+  <div class="cover-tags">
+    <span class="cover-tag">🎬 영화 기본</span>
+    <span class="cover-tag">🏀 농구 규칙</span>
+    <span class="cover-tag">👥 등장인물</span>
+    <span class="cover-tag">💬 명대사</span>
+    <span class="cover-tag">🏅 실화</span>
+  </div>
+  <button class="start-btn" onclick="go(1)">🚀 퀴즈 시작!</button>
+</section>
+
+<!-- ══ Q1 ══ -->
+<section class="slide bg-b" data-idx="1">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 01 / 25 <span class="qcat">🎬 영화 기본</span></div>
+  <div class="q-text">영화 '리바운드'의 감독은<br>누구인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 '리바운드(2023)' 이후 사극 '왕과 사는 남자(2026)'도 만든 감독이에요! '기억의 밤(2017)'도 그의 작품입니다.</div>
+  <div class="ans-box">
+    <div class="ans-main">장항준</div>
+    <div class="ans-exp">장항준 감독은 리바운드(2023), 왕과 사는 남자(2026) 등을 연출한 감독입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q2 ══ -->
+<section class="slide bg-c" data-idx="2">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 02 / 25 <span class="qcat">🎬 영화 기본</span></div>
+  <div class="q-text">영화 '리바운드'는<br>몇 세 이상 관람할 수 있나요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 초등학교 고학년~중학생 정도면 볼 수 있는 등급이에요!</div>
+  <div class="ans-box">
+    <div class="ans-main">12세 이상 관람가</div>
+    <div class="ans-exp">영화 리바운드는 12세 이상 관람가로 분류되어 있습니다. 2023년 4월 5일 개봉, 122분 상영.</div>
+  </div>
+</section>
+
+<!-- ══ Q3 ══ -->
+<section class="slide bg-d" data-idx="3">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 03 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">이 영화는 어느 학교<br>농구부의 실화인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 부산에 있는 고등학교예요. 강양현의 모교이기도 합니다!</div>
+  <div class="ans-box">
+    <div class="ans-main">부산중앙고등학교</div>
+    <div class="ans-exp">2012년 부산중앙고등학교 농구부의 실화를 바탕으로 만든 영화입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q4 ══ -->
+<section class="slide bg-e" data-idx="4">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 04 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">강양현은 코치가 되기 전<br>어떤 신분이었나요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 군대 대신 사회에서 봉사하는 제도로, 학교에서 일하고 있었어요!</div>
+  <div class="ans-box">
+    <div class="ans-main">공익근무요원</div>
+    <div class="ans-exp">강양현은 프로 은퇴 후 부산중앙고에서 공익근무요원으로 복무 중이었습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q5 ══ -->
+<section class="slide bg-f" data-idx="5">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 05 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">강양현이 고교 시절<br>전국대회에서 받은 상은?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 Most Valuable Player, 대회 최우수 선수에게 주는 상이에요!</div>
+  <div class="ans-box">
+    <div class="ans-main">MVP (최우수선수상)</div>
+    <div class="ans-exp">강양현은 전국대회에서 MVP를 받을 만큼 뛰어난 고교 농구 선수였습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q6 ══ -->
+<section class="slide bg-g" data-idx="6">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 06 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">부산중앙고의 첫 번째<br>전국대회 상대는?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 서울에 있는 고교 농구 최강팀이에요!</div>
+  <div class="ans-box">
+    <div class="ans-main">용산고</div>
+    <div class="ans-exp">고교 농구 최강 용산고가 첫 경기 상대였습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q7 ══ -->
+<section class="slide bg-h" data-idx="7">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 07 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">첫 경기에서 당한<br>치욕적인 결과는?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 경기를 시작조차 못 한 결과예요. 공식 점수는 20:0!</div>
+  <div class="ans-box">
+    <div class="ans-main">몰수패</div>
+    <div class="ans-exp">에이스 이탈로 5명을 채우지 못해 몰수패를 당했습니다. 공식 기록 20:0.</div>
+  </div>
+</section>
+
+<!-- ══ Q8 ══ -->
+<section class="slide bg-i" data-idx="8">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 08 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">몰수패 이후 받은<br>출전 정지 기간은?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 1년의 절반 동안 대회에 나갈 수 없었어요!</div>
+  <div class="ans-box">
+    <div class="ans-main">6개월</div>
+    <div class="ans-exp">출전 정지 6개월 처벌을 받았습니다. 이 기간 동안 더욱 혹독하게 훈련했습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q9 ══ -->
+<section class="slide bg-j" data-idx="9">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 09 / 25 <span class="qcat">📖 줄거리</span></div>
+  <div class="q-text">최종 대회에서 기적을 이룬<br>기간은 며칠인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 "○일간의 기적"이라 불려요. 1주일보다 하루 더 많아요!</div>
+  <div class="ans-box">
+    <div class="ans-main">8일</div>
+    <div class="ans-exp">"8일간의 기적"! 2012년 제37회 대한농구협회장기 전국 고교농구대회에서 준우승했습니다.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     Q10 ~ Q15 ── 객관식 등장인물
+══════════════════════════════════════════ -->
+
+<!-- ══ Q10 ── 강양현 코치 배우 ══ -->
+<section class="slide bg-a" data-idx="10" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 10 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">강양현 코치를 연기한<br>배우는 누구인가요?</div>
+
+  <div class="mc-wrap" data-correct="2">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>이신영</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>안재홍</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>정진운</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>김택</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 드라마 '응답하라 1988'에서 정환 역으로 유명한 배우예요!</div>
+  <div class="ans-box">
+    <div class="ans-main">② 안재홍</div>
+    <div class="ans-exp">안재홍이 강양현 코치 역을 맡아 열연했습니다. 이신영·정진운·김택 등과 함께 출연했습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q11 ── 천기범 포지션 ══ -->
+<section class="slide bg-b" data-idx="11" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 11 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">천기범(이신영)의<br>농구 포지션은?</div>
+
+  <div class="mc-wrap" data-correct="1">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>포인트 가드 (PG)</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>슈팅 가드 (SG)</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>스몰 포워드 (SF)</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>센터 (C)</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 팀의 공격을 이끄는 1번 포지션! 키가 작아 슬럼프에 빠진 선수예요.</div>
+  <div class="ans-box">
+    <div class="ans-main">① 포인트 가드 (PG)</div>
+    <div class="ans-exp">천기범(이신영)은 포인트 가드(PG). 실력 있는 선수지만 키 때문에 슬럼프에 빠져 있었습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q12 ── 홍순규 출신 ══ -->
+<section class="slide bg-c" data-idx="12" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 12 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">축구선수 출신으로<br>농구부에 스카우트된 선수는?</div>
+
+  <div class="mc-wrap" data-correct="3">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>배규혁</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>정강호</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>홍순규</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>정진욱</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 압도적인 키와 점프력 덕분에 센터(C)로 스카우트됐어요! 배우는 '김택'입니다.</div>
+  <div class="ans-box">
+    <div class="ans-main">③ 홍순규</div>
+    <div class="ans-exp">홍순규(김택)는 원래 축구선수였지만, 압도적인 신체 능력 덕분에 센터로 스카우트되었습니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q13 ── 배규혁 특징 ══ -->
+<section class="slide bg-d" data-idx="13" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 13 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">발목 부상으로 꿈을 접고<br>내기 농구를 하던 선수는?</div>
+
+  <div class="mc-wrap" data-correct="4">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>허재윤</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>정진욱</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>정강호</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>배규혁</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 스몰 포워드(SF) 포지션이에요. 배우는 정진운입니다! 길거리 내기 농구로 생활했어요.</div>
+  <div class="ans-box">
+    <div class="ans-main">④ 배규혁</div>
+    <div class="ans-exp">배규혁(정진운)은 발목 부상으로 꿈을 포기하고 길거리 내기 농구로 생활하던 스몰 포워드입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q14 ── 정진욱 별명 ══ -->
+<section class="slide bg-e" data-idx="14" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 14 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">스스로를 "한국의 마이클 조던"이라<br>부르는 선수는 누구인가요?</div>
+
+  <div class="mc-wrap" data-correct="2">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>천기범</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>정진욱</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>홍순규</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>허재윤</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 슈팅 가드(SG) 포지션. 열정 하나만큼은 팀에서 최고예요! 배우는 안지호입니다.</div>
+  <div class="ans-box">
+    <div class="ans-main">② 정진욱</div>
+    <div class="ans-exp">정진욱(안지호)은 스스로를 "한국의 마이클 조던"이라 부르는 열정 넘치는 슈팅 가드입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q15 ── 허재윤 특징 ══ -->
+<section class="slide bg-f" data-idx="15" data-mc="true">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 15 / 25 <span class="qcat">👥 등장인물</span></div>
+  <div class="q-text">7년 경력 만년 벤치에서<br>끝내 기회를 잡은 선수는?</div>
+
+  <div class="mc-wrap" data-correct="3">
+    <button class="mc-btn" onclick="checkMC(this,1)"><span class="mc-num">①</span>정강호</button>
+    <button class="mc-btn" onclick="checkMC(this,2)"><span class="mc-num">②</span>배규혁</button>
+    <button class="mc-btn" onclick="checkMC(this,3)"><span class="mc-num">③</span>허재윤</button>
+    <button class="mc-btn" onclick="checkMC(this,4)"><span class="mc-num">④</span>천기범</button>
+  </div>
+
+  <div class="mc-bottom">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 식스맨. 기초가 부족하지만 누구보다 성실한 선수예요! 배우는 김민입니다.</div>
+  <div class="ans-box">
+    <div class="ans-main">③ 허재윤</div>
+    <div class="ans-exp">허재윤(김민)은 초등학교 때부터 7년 경력이지만 만년 벤치 생활을 하다가 끈기로 기회를 잡은 식스맨입니다.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     Q16 ~ Q25 일반 문제
+══════════════════════════════ -->
+
+<!-- ══ Q16 ══ -->
+<section class="slide bg-g" data-idx="16">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 16 / 25 <span class="qcat">🏀 농구 규칙</span></div>
+  <div class="q-text">농구에서 몰수패가 선언되면<br>공식 점수는?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 이긴 팀의 점수는 20점, 진 팀은 0점으로 고정돼요!</div>
+  <div class="ans-box">
+    <div class="ans-main">20 : 0</div>
+    <div class="ans-exp">농구 몰수패(기권패)는 공식적으로 승팀 20점, 패팀 0점으로 기록됩니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q17 ══ -->
+<section class="slide bg-h" data-idx="17">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 17 / 25 <span class="qcat">🏀 농구 규칙</span></div>
+  <div class="q-text">FIBA 기준, 선수가 퍼스널 파울을<br>몇 개 받으면 퇴장인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 NBA는 6개지만, FIBA(국제·국내 고교)는 1개 더 적어요!</div>
+  <div class="ans-box">
+    <div class="ans-main">5개</div>
+    <div class="ans-exp">FIBA 및 국내 고교 기준 퍼스널 파울 5개 누적 시 퇴장됩니다. NBA는 6개입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q18 ══ -->
+<section class="slide bg-i" data-idx="18">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 18 / 25 <span class="qcat">🏀 농구 규칙</span></div>
+  <div class="q-text">코치에게 테크니컬 파울이<br>몇 개 누적되면 퇴장인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 "두 번 실수하면 아웃!"이에요.</div>
+  <div class="ans-box">
+    <div class="ans-main">2개</div>
+    <div class="ans-exp">코치에게 테크니컬 파울 2개가 누적되면 퇴장입니다. 상대팀에 자유투 1개와 공격권이 주어집니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q19 ══ -->
+<section class="slide bg-j" data-idx="19">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 19 / 25 <span class="qcat">🏀 농구 규칙</span></div>
+  <div class="q-text">3점 슛 성공 조건은<br>무엇인가요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 선을 밟으면 2점으로 처리돼요. 라인의 안쪽? 바깥쪽?</div>
+  <div class="ans-box">
+    <div class="ans-main">3점 라인 바깥에서 슛 성공</div>
+    <div class="ans-exp">3점 라인 바깥 → 3점, 안쪽 → 2점. 발이 선을 밟으면 2점. FIBA 기준 거리는 6.75m입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q20 ══ -->
+<section class="slide bg-a" data-idx="20">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 20 / 25 <span class="qcat">💬 명대사</span></div>
+  <div class="q-text">"그걸 뭐라고 하노?"<br>강양현 코치의 물음에<br>홍순규의 대답은?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 이 영화의 제목이자, 실패 후 다시 기회를 잡는 것을 뜻하는 단어예요!</div>
+  <div class="ans-box">
+    <div class="ans-main">"리바운드."</div>
+    <div class="ans-exp">슛이 빗나가도 공을 다시 잡을 수 있듯이, 인생에서도 실패 후 다시 기회를 잡는 것 = 리바운드.</div>
+  </div>
+</section>
+
+<!-- ══ Q21 ══ -->
+<section class="slide bg-b" data-idx="21">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 21 / 25 <span class="qcat">💬 명대사</span></div>
+  <div class="q-text">"네가 좋아하는 걸<br>절대 ( ) 하지 말라고."<br>빈칸에 들어갈 단어는?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 끝까지 하지 않고 중간에 그만두는 행동을 뜻해요!</div>
+  <div class="ans-box">
+    <div class="ans-main">포기</div>
+    <div class="ans-exp">"네가 좋아하는 걸 절대 포기하지 말라고." 강양현 코치의 대표 명대사입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q22 ══ -->
+<section class="slide bg-c" data-idx="22">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 22 / 25 <span class="qcat">💬 명대사</span></div>
+  <div class="q-text">"중꺾마"의 뜻을<br>풀어서 말하면?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 "중요한 건 ○○지 않는 ○○" — 5글자 단어의 줄임말이에요!</div>
+  <div class="ans-box">
+    <div class="ans-main">중요한 건 꺾이지 않는 마음</div>
+    <div class="ans-exp">'중꺾마'는 어떤 상황에서도 포기하지 않겠다는 의지를 담은 말. 영화의 정신적 슬로건입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q23 ══ -->
+<section class="slide bg-d" data-idx="23">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 23 / 25 <span class="qcat">💬 명대사</span></div>
+  <div class="q-text">"남은 경기, 그리고 남은 인생.<br>겁먹지 말고 ( ) 해서<br>다시 잡아내라." 빈칸은?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 두려움 없이 용감하게 앞으로 뛰어드는 행동이에요!</div>
+  <div class="ans-box">
+    <div class="ans-main">달려들어서</div>
+    <div class="ans-exp">"겁먹지 말고 달려들어서 다시 잡아내라." 경기뿐 아니라 인생 전체에 용기 내어 도전하라는 격려의 말입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q24 ══ -->
+<section class="slide bg-e" data-idx="24">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 24 / 25 <span class="qcat">🏅 실화</span></div>
+  <div class="q-text">실제 강양현 코치는<br>현재 어떤 일을 하나요?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 5명이 아닌 3명이 하는 농구! 나라를 대표하는 팀의 지도자예요.</div>
+  <div class="ans-box">
+    <div class="ans-main">3×3 농구 국가대표 코치</div>
+    <div class="ans-exp">실제 강양현 코치는 현재 3×3 농구 국가대표팀 코치로 활동 중입니다.</div>
+  </div>
+</section>
+
+<!-- ══ Q25 ══ -->
+<section class="slide bg-f" data-idx="25">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="q-badge">Q 25 / 25 <span class="qcat">🌟 마지막!</span></div>
+  <div class="q-text">영화에서 '리바운드'가<br>인생에서 의미하는 것은?</div>
+  <div class="q-btns">
+    <button class="q-btn btn-hint" onclick="showHint(this)">💡 힌트 보기</button>
+    <button class="q-btn btn-ans" onclick="showAns(this)">🎯 정답 확인</button>
+  </div>
+  <div class="hint-box">💡 농구에서 빗나간 공을 다시 잡듯이… 삶에서도 마찬가지예요!</div>
+  <div class="ans-box">
+    <div class="ans-main">실패해도 다시 일어나<br>기회를 잡는 것</div>
+    <div class="ans-exp">농구에서 빗나간 공을 다시 잡듯, 인생에서 실패 후 포기하지 않고 다시 도전하는 것을 의미합니다. 중꺾마! 🏀</div>
+  </div>
+</section>
+
+<!-- ══ 마무리 ══ -->
+<section class="slide bg-g" data-type="end">
+  <div class="dc dc1"></div><div class="dc dc2"></div><div class="dc dc3"></div>
+  <div class="end-emoji">🏆</div>
+  <div class="end-title">퀴즈 완료!</div>
+  <div class="end-sub">
+    25문제 모두 도전했습니다! 🎉<br><br>
+    <b style="color:#ffd93d;">중꺾마!</b><br>
+    중요한 건 꺾이지 않는 마음 ✨<br><br>
+    <span style="font-size:clamp(12px,1.5vw,18px);color:rgba(255,255,255,.5);">
+      영화 리바운드 · 2023 · 부산중앙고 농구부 실화
+    </span>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<script>
+/* ════════════════════════════
+   별 배경
+════════════════════════════ */
+(function(){
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+  const stars = Array.from({length:130}, () => ({
+    x: Math.random() * c.width,
+    y: Math.random() * c.height,
+    r: Math.random() * 1.6 + .3,
+    a: Math.random(),
+    s: (Math.random() - .5) * .007
+  }));
+  function draw(){
+    ctx.clearRect(0, 0, c.width, c.height);
+    stars.forEach(s => {
+      s.a += s.s;
+      if(s.a <= 0 || s.a >= 1) s.s *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize', () => {
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+  });
+})();
+
+/* ════════════════════════════
+   슬라이드 제어
+════════════════════════════ */
+const slides = document.querySelectorAll('.slide');
+const progBar = document.getElementById('prog-bar');
+const qnumEl = document.getElementById('qnum');
+const dotsWrap = document.getElementById('dots');
+let cur = 0;
+const N = slides.length;
+
+/* 도트 생성 */
+for(let i = 0; i < N; i++){
+  const d = document.createElement('span');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.onclick = (() => { const idx = i; return () => go2(idx); })();
+  dotsWrap.appendChild(d);
+}
+
+function updateUI(){
+  const idx  = slides[cur].dataset.idx;
+  const type = slides[cur].dataset.type;
+  if(idx){
+    progBar.style.width = (parseInt(idx) / 25 * 100) + '%';
+    qnumEl.textContent  = idx + ' / 25';
+  } else if(type === 'end'){
+    progBar.style.width = '100%';
+    qnumEl.textContent  = '';
+  } else {
+    progBar.style.width = '0%';
+    qnumEl.textContent  = '';
+  }
+  dotsWrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
+}
+
+function go2(i){
+  if(i === cur) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('prev');
+  cur = i;
+  slides.forEach((s, j) => {
+    s.classList.remove('active', 'prev');
+    if(j === cur)      s.classList.add('active');
+    else if(j < cur)   s.classList.add('prev');
+  });
+  updateUI();
+  playSlideSound();
+}
+function go(dir){ go2(Math.max(0, Math.min(N - 1, cur + dir))); }
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+  if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+});
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+document.addEventListener('touchend', e => {
+  const d = tx - e.changedTouches[0].clientX;
+  if(Math.abs(d) > 50) go(d > 0 ? 1 : -1);
+}, { passive: true });
+
+updateUI();
+
+/* ════════════════════════════
+   오디오 컨텍스트
+════════════════════════════ */
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+/* 슬라이드 전환음 */
+function playSlideSound(){
+  try{
+    const ctx = getAudio();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine'; o.frequency.value = 480;
+    g.gain.setValueAtTime(.15, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .16);
+    o.start(); o.stop(ctx.currentTime + .16);
+  }catch(e){}
+}
+
+/* 힌트 음악 ── 상쾌한 3음 아르페지오 */
+function playHintSound(){
+  try{
+    const ctx = getAudio();
+    /* 노란빛 느낌의 E장조 아르페지오 */
+    const notes = [
+      { freq: 659.3, t: 0    },   // E5
+      { freq: 783.9, t: 0.13 },   // G5
+      { freq: 987.8, t: 0.26 },   // B5
+      { freq: 1318.5,t: 0.39 },   // E6
+    ];
+    notes.forEach(({ freq, t }) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      o.connect(g);
+      if(pan){ g.connect(pan); pan.connect(ctx.destination); }
+      else { g.connect(ctx.destination); }
+      o.type = 'triangle';
+      o.frequency.value = freq;
+      const start = ctx.currentTime + t;
+      g.gain.setValueAtTime(0, start);
+      g.gain.linearRampToValueAtTime(.22, start + .04);
+      g.gain.exponentialRampToValueAtTime(.001, start + .32);
+      o.start(start);
+      o.stop(start + .35);
+    });
+  }catch(e){}
+}
+
+/* 빵빠레 (정답/객관식 정답) */
+function playFanfare(){
+  try{
+    const ctx = getAudio();
+    /* 1절: 팡파르 도-미-솔-도5 */
+    const fanfare = [
+      { freq: 261.6, t: 0    },
+      { freq: 329.6, t: 0.13 },
+      { freq: 392.0, t: 0.26 },
+      { freq: 523.2, t: 0.39 },
+    ];
+    fanfare.forEach(({ freq, t }) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'square'; o.frequency.value = freq;
+      const s = ctx.currentTime + t;
+      g.gain.setValueAtTime(.16, s);
+      g.gain.exponentialRampToValueAtTime(.001, s + .18);
+      o.start(s); o.stop(s + .2);
+    });
+    /* 2절: 화음 마무리 */
+    setTimeout(() => {
+      try{
+        const c2 = getAudio();
+        [392, 523.2, 659.2, 784].forEach((freq, i) => {
+          const o = c2.createOscillator(), g = c2.createGain();
+          o.connect(g); g.connect(c2.destination);
+          o.type = 'sine'; o.frequency.value = freq;
+          const t = c2.currentTime + i * .08;
+          g.gain.setValueAtTime(.14, t);
+          g.gain.exponentialRampToValueAtTime(.001, t + .28);
+          o.start(t); o.stop(t + .3);
+        });
+      }catch(e){}
+    }, 580);
+  }catch(e){}
+}
+
+/* 오답 버즈음 */
+function playWrongSound(){
+  try{
+    const ctx = getAudio();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sawtooth'; o.frequency.value = 140;
+    g.gain.setValueAtTime(.2, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .45);
+    o.start(); o.stop(ctx.currentTime + .45);
+  }catch(e){}
+}
+
+/* ════════════════════════════
+   힌트 / 정답 (일반)
+════════════════════════════ */
+function showHint(btn){
+  playHintSound();
+  const slide = btn.closest('.slide');
+  slide.querySelector('.hint-box').classList.add('show');
+  btn.disabled = true;
+  btn.textContent = '💡 힌트 확인 완료';
+}
+
+function showAns(btn){
+  playFanfare();
+  const slide = btn.closest('.slide');
+  slide.querySelector('.ans-box').classList.add('show');
+  btn.disabled = true;
+  launchConfetti();
+}
+
+/* ════════════════════════════
+   객관식 (Q10 ~ Q15)
+════════════════════════════ */
+function checkMC(btn, chosen){
+  const wrap = btn.closest('.mc-wrap');
+  /* 이미 선택했으면 무시 */
+  if(wrap.dataset.done === '1') return;
+  wrap.dataset.done = '1';
+
+  const correct = parseInt(wrap.dataset.correct);
+  const allBtns = wrap.querySelectorAll('.mc-btn');
+
+  /* 모든 버튼 비활성화 */
+  allBtns.forEach(b => b.disabled = true);
+
+  if(chosen === correct){
+    /* 정답 */
+    btn.classList.add('correct');
+    allBtns.forEach((b, idx) => {
+      if(idx + 1 !== correct) b.classList.add('dimmed');
+    });
+    playFanfare();
+    launchConfetti();
+  } else {
+    /* 오답 */
+    btn.classList.add('wrong');
+    allBtns.forEach((b, idx) => {
+      if(idx + 1 === correct)    b.classList.add('correct');
+      else if(b !== btn)         b.classList.add('dimmed');
+    });
+    playWrongSound();
+  }
+
+  /* 정답 박스 0.7초 후 등장 */
+  const slide = btn.closest('.slide');
+  setTimeout(() => {
+    slide.querySelector('.ans-box').classList.add('show');
+  }, 700);
+}
+
+/* ════════════════════════════
+   컨페티
+════════════════════════════ */
+function launchConfetti(){
+  const fw = document.getElementById('fireworks');
+  const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff',
+                  '#ff9f43','#ff6bff','#6bffff','#ffb347'];
+  for(let i = 0; i < 70; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    const size = 8 + Math.random() * 12;
+    p.style.cssText = `
+      left:${Math.random() * 100}%;
+      top:-20px;
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      width:${size}px;
+      height:${size * (Math.random() > 0.5 ? 1.8 : 1)}px;
+      border-radius:${Math.random() > 0.45 ? '50%' : '3px'};
+      animation-duration:${1.3 + Math.random() * 2}s;
+      animation-delay:${Math.random() * .7}s;
+      opacity:1;
+    `;
+    fw.appendChild(p);
+    setTimeout(() => p.remove(), (3.5 + Math.random() * 2) * 1000);
+  }
+}
+</script>
+</body>
+</html>

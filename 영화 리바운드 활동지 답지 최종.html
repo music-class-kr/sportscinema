@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>시네마스포츠 · 리바운드 활동지 [교사용 답안]</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+  font-family:'Noto Sans KR', sans-serif;
+  background:#808080;
+  display:flex; flex-direction:column;
+  align-items:center;
+  padding:28px 0; gap:22px;
+}
+
+.page{
+  width:794px;
+  height:1123px;
+  min-height:1123px;
+  max-height:1123px;
+  background:#fff;
+  padding:46px 46px 38px 46px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* 교사용 워터마크 */
+.page::before{
+  content:'교사용 답안';
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-35deg);
+  font-size:88px;font-weight:900;
+  color:rgba(220,0,0,.06);
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:0;
+  letter-spacing:4px;
+}
+
+/* 헤더 */
+.hd{
+  display:flex; align-items:center; gap:11px;
+  border-bottom:3px solid #1a1a1a;
+  padding-bottom:8px;
+  flex-shrink:0;
+  position:relative;z-index:1;
+}
+.hd-bar{ width:6px; background:#222; border-radius:3px; flex-shrink:0; align-self:stretch; }
+.hd-left{ flex:1; }
+.hd-sub{ font-size:9px; font-weight:700; color:#aaa; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:2px; }
+.hd-title{ font-size:20px; font-weight:900; color:#111; line-height:1; }
+.hd-title small{ font-size:12px; font-weight:400; color:#999; margin-left:8px; }
+.hd-right{ display:flex; align-items:center; gap:16px; flex-shrink:0; }
+.mr{ display:flex; align-items:center; gap:6px; }
+.ml{ font-size:11px; font-weight:900; color:#555; white-space:nowrap; }
+.mline{ width:100px; border-bottom:1.5px solid #aaa; height:16px; }
+
+/* 교사용 뱃지 */
+.ans-badge{
+  background:#dc0000;color:#fff;
+  font-size:10px;font-weight:900;
+  border-radius:4px;padding:2px 8px;
+  letter-spacing:1px;
+  flex-shrink:0;
+}
+
+/* 섹션 */
+.sec{
+  background:#f5f5f5;
+  border-radius:7px;
+  padding:8px 12px;
+  border-left:5px solid #bbb;
+  flex-shrink:0;
+  position:relative;z-index:1;
+}
+.st{
+  font-size:11px; font-weight:900; color:#1a1a1a;
+  margin-bottom:6px;
+  display:flex; align-items:center; gap:7px;
+}
+.sn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:19px; height:19px;
+  background:#222; color:#fff;
+  border-radius:50%; font-size:9px; font-weight:900; flex-shrink:0;
+}
+.sd{ font-size:9px; color:#bbb; font-weight:400; margin-left:1px; }
+
+/* 정보 그리드 */
+.info-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.ic{
+  background:#fff; border:1px solid #e5e5e5; border-radius:5px;
+  padding:5px 9px; display:flex; flex-direction:column; gap:1px;
+}
+.ik{ font-size:9px; color:#bbb; font-weight:700; }
+.iv{ font-size:11px; color:#111; font-weight:700; }
+
+/* 줄거리 */
+.story-box{
+  background:#fff; border:1px solid #e5e5e5; border-radius:6px;
+  padding:8px 12px;
+  font-size:11px; color:#333; line-height:1.9;
+}
+.hi{ font-weight:900; color:#111; background:#e8e8e8; border-radius:2px; padding:0 3px; }
+
+/* 태그 공통 */
+.tag{
+  font-size:11px; font-weight:700;
+  padding:3px 11px; border-radius:14px;
+  border:1.5px solid #ccc; background:#fff; color:#444;
+  display:inline-block;
+}
+.tag-row{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+.tl{ font-size:9px; color:#bbb; font-weight:700; white-space:nowrap; }
+
+/* ★ 정답 태그 – 빨간색 ★ */
+.tag.ans{
+  background:#dc0000;
+  border-color:#dc0000;
+  color:#fff;
+  font-weight:900;
+}
+
+/* 빈칸 채우기 */
+.fl{ display:flex; flex-direction:column; gap:5px; }
+.fi{
+  background:#fff; border:1px solid #e5e5e5; border-radius:6px;
+  padding:6px 11px; display:flex; flex-direction:column; gap:5px;
+}
+.fq{ display:flex; align-items:baseline; gap:5px; font-size:11px; color:#222; line-height:1.8; flex-wrap:wrap; }
+.fn{ font-weight:900; color:#555; min-width:14px; font-size:11px; flex-shrink:0; }
+
+/* ★ 정답 빈칸 ★ */
+.bd-ans{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:68px; height:22px;
+  border-bottom:2.5px solid #dc0000;
+  background:#fff0f0; border-radius:3px;
+  font-size:11px; font-weight:900; color:#dc0000;
+  margin:0 2px; vertical-align:middle;
+  padding:0 6px;
+}
+.fc{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+
+/* OX 퀴즈 */
+.ql{ display:flex; flex-direction:column; gap:4px; }
+.qi{
+  background:#fff; border:1px solid #e5e5e5; border-radius:6px;
+  padding:6px 11px; display:flex; align-items:flex-start; gap:9px;
+}
+.qn{ font-size:10px; font-weight:900; color:#888; min-width:14px; padding-top:1px; }
+.qt{ font-size:11px; color:#222; flex:1; line-height:1.45; }
+.qi-right{ display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex-shrink:0; }
+
+/* ★ OX 정답 뱃지 ★ */
+.ox-ans{
+  width:30px; height:24px;
+  background:#dc0000; border-radius:4px;
+  font-size:13px; font-weight:900; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+/* OX 해설 */
+.ox-exp{
+  font-size:9px; color:#dc0000; font-weight:700;
+  max-width:200px; text-align:right; line-height:1.4;
+}
+
+/* 등장인물 그리드 */
+.cg{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.cc{
+  background:#fff; border:1px solid #e5e5e5; border-radius:6px;
+  padding:7px 9px; display:flex; flex-direction:column; gap:3px;
+}
+.cn{ font-size:12px; font-weight:900; color:#111; }
+.cp{ font-size:9px; font-weight:700; background:#efefef; color:#777; border-radius:3px; padding:1px 6px; width:fit-content; }
+.cl{ font-size:9px; color:#aaa; }
+.ctags{ display:flex; flex-wrap:wrap; gap:3px; }
+
+/* 농구 규칙 */
+.rg{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.rc{ background:#fff; border:1px solid #e5e5e5; border-radius:6px; padding:8px 11px; }
+.rh{ display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.rn{ font-size:12px; font-weight:900; color:#111; }
+.rb{ font-size:9px; font-weight:700; background:#e5e5e5; color:#666; border-radius:3px; padding:1px 6px; }
+.re{ font-size:11px; color:#444; line-height:1.65; margin-bottom:6px; }
+.rq{ font-size:10px; font-weight:700; color:#888; margin-bottom:4px; }
+.rtags{ display:flex; flex-wrap:wrap; gap:4px; }
+
+/* 명대사 */
+.qcard{
+  background:#fff; border:1px solid #e0e0e0;
+  border-left:5px solid #aaa; border-radius:6px;
+  padding:8px 12px;
+}
+.qtext{ font-size:11px; color:#333; font-style:italic; line-height:1.8; }
+.qby{ font-size:9px; color:#bbb; font-weight:700; text-align:right; margin-top:3px; }
+.qq{ font-size:10px; font-weight:700; color:#777; margin:5px 0 4px; }
+
+/* 쓰기 라인 */
+.wlines{ display:flex; flex-direction:column; }
+.wl-md{ border-bottom:1px solid #e8e8e8; height:27px; width:100%; }
+.wl-es{ border-bottom:1px solid #e0e0e0; height:42px; width:100%; }
+
+/* 생각해봐요 */
+.thcard{ background:#fff; border:1px solid #e5e5e5; border-radius:6px; padding:8px 11px; }
+.thq{ font-size:11px; font-weight:700; color:#222; line-height:1.55; margin-bottom:6px; }
+.thhint{ font-size:9px; color:#bbb; margin-bottom:4px; }
+
+/* 나만의 리바운드 */
+.rbbox{
+  border:2px dashed #bbb; border-radius:8px; background:#fff;
+  padding:9px 12px; display:flex; flex-direction:column; gap:6px;
+  flex-shrink:0;
+  position:relative;z-index:1;
+}
+.rbtitle{ font-size:12px; font-weight:900; color:#222; }
+.rbhint{ font-size:10px; color:#bbb; line-height:1.6; }
+
+/* tip 박스 */
+.tipbox{
+  background:#f5f5f5; border:1px solid #e5e5e5; border-radius:5px;
+  padding:6px 11px; font-size:10px; color:#888; line-height:1.65;
+  flex-shrink:0;
+}
+.tipbox strong{ color:#444; font-weight:700; }
+
+/* 자기평가 */
+.evrow{
+  display:flex; align-items:center;
+  background:#fff; border:1px solid #e5e5e5;
+  border-radius:5px; padding:6px 11px; gap:9px;
+}
+.evtxt{ font-size:11px; color:#222; flex:1; }
+
+/* ★ 별점 정답 (5점 만점 예시) ★ */
+.star-ans{ font-size:13px; color:#dc0000; letter-spacing:1px; font-weight:900; }
+
+/* 페이지 번호 */
+.pn{
+  position:absolute; bottom:14px; right:46px;
+  font-size:9px; color:#ccc; font-weight:600;
+}
+
+/* 정답 해설 박스 */
+.exp-box{
+  background:#fff5f5;border:1px solid #ffb3b3;border-radius:4px;
+  padding:4px 8px;font-size:9px;color:#dc0000;font-weight:700;
+  margin-top:4px;line-height:1.5;
+}
+
+/* 인쇄 */
+@media print{
+  body{ background:#fff; padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always;
+    margin:0; width:210mm; height:297mm;
+    padding:12mm 12mm 10mm 12mm;
+  }
+  @page{ size:A4 portrait; margin:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ████  PAGE 1  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마스포츠 · Cinema Sports</div>
+      <div class="hd-title">🏀 리바운드 <small>Rebound · 활동지</small></div>
+    </div>
+    <div class="hd-right">
+      <span class="ans-badge">★ 교사용 답안 ★</span>
+      <div class="mr"><span class="ml">학번</span><div class="mline"></div></div>
+      <div class="mr"><span class="ml">이름</span><div class="mline"></div></div>
+    </div>
+  </div>
+
+  <!-- ① 영화 기본 정보 -->
+  <div class="sec">
+    <div class="st"><span class="sn">1</span> 영화 기본 정보 <span class="sd">아래 정보를 함께 읽어보세요</span></div>
+    <div class="info-grid">
+      <div class="ic"><span class="ik">🎬 감독</span><span class="iv">장항준</span></div>
+      <div class="ic"><span class="ik">📅 개봉일</span><span class="iv">2023년 4월 5일</span></div>
+      <div class="ic"><span class="ik">⏱ 상영시간</span><span class="iv">122분 (약 2시간)</span></div>
+      <div class="ic"><span class="ik">🎭 장르</span><span class="iv">스포츠 드라마</span></div>
+      <div class="ic"><span class="ik">👤 주연</span><span class="iv">안재홍 (강양현 코치)</span></div>
+      <div class="ic"><span class="ik">📖 바탕</span><span class="iv">2012년 실화</span></div>
+    </div>
+  </div>
+
+  <!-- ② 줄거리 -->
+  <div class="sec">
+    <div class="st"><span class="sn">2</span> 줄거리 읽기 <span class="sd">아래 내용을 읽고 다음 활동을 해보세요</span></div>
+    <div class="story-box">
+      과거 부산중앙고 농구부의 <span class="hi">에이스</span>였던 <span class="hi">강양현</span>은 전국대회에서
+      <span class="hi">MVP</span>까지 받은 선수였지만, 프로에서는 빛을 발하지 못하고 은퇴했습니다.
+      이후 모교에서 <span class="hi">공익근무요원</span>으로 복무하던 중,
+      <span class="hi">해체 위기</span>에 놓인 농구부의 <span class="hi">신임 코치</span>로 발탁됩니다.<br>
+      첫 전국대회 상대는 고교 최강 <span class="hi">용산고</span>. 팀워크가 무너진 중앙고는
+      <span class="hi">몰수패</span>라는 치욕을 당하지만, 코치와 단 <span class="hi">6명</span>의 선수는
+      포기하지 않고 <span class="hi">8일간</span>의 기적을 써 내려갑니다.
+    </div>
+  </div>
+
+  <!-- ③ 빈칸 채우기 – 정답 표시 -->
+  <div class="sec">
+    <div class="st"><span class="sn">3</span> 빈칸 채우기 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 정답은 빨간색으로 표시</span></div>
+    <div class="fl">
+
+      <div class="fi">
+        <div class="fq">
+          <span class="fn">①</span>강양현은 전국대회에서&nbsp;
+          <span class="bd-ans">MVP</span>
+          &nbsp;까지 받은 뛰어난 농구선수였다.
+        </div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag ans">MVP</span>
+          <span class="tag">꼴찌상</span>
+          <span class="tag">감독상</span>
+        </div>
+      </div>
+
+      <div class="fi">
+        <div class="fq">
+          <span class="fn">②</span>양현은 프로 은퇴 후&nbsp;
+          <span class="bd-ans">공익근무요원</span>
+          &nbsp;으로 복무하다 코치가 된다.
+        </div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag ans">공익근무요원</span>
+          <span class="tag">체육 선생님</span>
+          <span class="tag">교장 선생님</span>
+        </div>
+      </div>
+
+      <div class="fi">
+        <div class="fq">
+          <span class="fn">③</span>첫 경기 상대는&nbsp;
+          <span class="bd-ans">용산</span>
+          &nbsp;고이고, 중앙고는&nbsp;
+          <span class="bd-ans">몰수패</span>
+          &nbsp;를 당했다.
+        </div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag ans">용산</span>
+          <span class="tag">서울</span>
+          <span class="tag">부산</span>
+          <span class="tag ans">몰수패</span>
+          <span class="tag">우승</span>
+          <span class="tag">무승부</span>
+        </div>
+      </div>
+
+      <div class="fi">
+        <div class="fq">
+          <span class="fn">④</span>코치와 단&nbsp;
+          <span class="bd-ans">6</span>
+          &nbsp;명의 선수가&nbsp;
+          <span class="bd-ans">8</span>
+          &nbsp;일간의 기적을 써 내려갔다.
+        </div>
+        <div class="fc"><span class="tl">📦 보기</span>
+          <span class="tag ans">6</span>
+          <span class="tag">10</span>
+          <span class="tag">3</span>
+          <span class="tag ans">8</span>
+          <span class="tag">30</span>
+          <span class="tag">100</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ④ OX 퀴즈 – 정답 표시 -->
+  <div class="sec">
+    <div class="st"><span class="sn">4</span> OX 퀴즈 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 정답은 빨간색으로 표시</span></div>
+    <div class="ql">
+
+      <div class="qi">
+        <span class="qn">1</span>
+        <span class="qt">강양현은 고등학교 시절 전국대회 MVP를 받은 적이 있다.</span>
+        <div class="qi-right">
+          <div class="ox-ans">O</div>
+          <div class="ox-exp">고교 시절 전국대회 MVP 수상 ✓</div>
+        </div>
+      </div>
+
+      <div class="qi">
+        <span class="qn">2</span>
+        <span class="qt">중앙고는 첫 경기에서 이겨 바로 결승에 진출했다.</span>
+        <div class="qi-right">
+          <div class="ox-ans">X</div>
+          <div class="ox-exp">첫 경기에서 몰수패를 당했다 ✓</div>
+        </div>
+      </div>
+
+      <div class="qi">
+        <span class="qn">3</span>
+        <span class="qt">이 영화는 2012년에 실제로 일어난 이야기를 바탕으로 만들어졌다.</span>
+        <div class="qi-right">
+          <div class="ox-ans">O</div>
+          <div class="ox-exp">2012년 부산중앙고 실화 기반 ✓</div>
+        </div>
+      </div>
+
+      <div class="qi">
+        <span class="qn">4</span>
+        <span class="qt">홍순규는 원래 축구를 하다가 코치 눈에 띄어 농구부에 들어오게 되었다.</span>
+        <div class="qi-right">
+          <div class="ox-ans">O</div>
+          <div class="ox-exp">축구선수 출신, 점프력·키로 스카우트 ✓</div>
+        </div>
+      </div>
+
+      <div class="qi">
+        <span class="qn">5</span>
+        <span class="qt">실제 부산중앙고 선수들이 영화에 엑스트라로 직접 출연했다.</span>
+        <div class="qi-right">
+          <div class="ox-ans">X</div>
+          <div class="ox-exp">배우들이 실제 선수 헤어·소품 재현 (직접 출연 아님) ✓</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pn">1 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 2  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마스포츠 · Cinema Sports</div>
+      <div class="hd-title">🏀 리바운드 <small>등장인물 &amp; 농구 규칙</small></div>
+    </div>
+    <span class="ans-badge">★ 교사용 답안 ★</span>
+  </div>
+
+  <!-- ⑤ 등장인물 -->
+  <div class="sec">
+    <div class="st"><span class="sn">5</span> 등장인물 알아보기 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 빨간색 = 정답 태그</span></div>
+    <div class="cg">
+
+      <div class="cc">
+        <div class="cn">강양현 코치</div>
+        <div class="cp">주인공 · 코치 / 안재홍</div>
+        <div class="cl">이 인물의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">전 농구 에이스</span>
+          <span class="tag ans">공익근무요원</span>
+          <span class="tag ans">포기를 모름</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">천기범</div>
+        <div class="cp">포인트 가드(PG) / 이신영</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">천재였지만 슬럼프</span>
+          <span class="tag">키가 늦게 자람</span>
+          <span class="tag ans">팀의 에이스</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">배규혁</div>
+        <div class="cp">스몰 포워드(SF) / 정진운</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">발목 부상</span>
+          <span class="tag ans">길거리 내기 농구</span>
+          <span class="tag ans">꿈을 접었던 선수</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">홍순규</div>
+        <div class="cp">센터(C) / 김택</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">축구선수 출신</span>
+          <span class="tag ans">압도적인 키</span>
+          <span class="tag">괴력 보유</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">정강호</div>
+        <div class="cp">파워 포워드(PF) / 정건주</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">길거리 농구 출신</span>
+          <span class="tag">정식 훈련 없음</span>
+          <span class="tag ans">강한 체력</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">허재윤</div>
+        <div class="cp">식스맨 / 김민</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">7년 경력 벤치</span>
+          <span class="tag ans">기초 부족</span>
+          <span class="tag ans">누구보다 성실</span>
+        </div>
+      </div>
+
+      <div class="cc">
+        <div class="cn">정진욱</div>
+        <div class="cp">슈팅 가드(SG) / 안지호</div>
+        <div class="cl">이 선수의 특징은?</div>
+        <div class="ctags">
+          <span class="tag ans">열정만큼은 최고</span>
+          <span class="tag ans">자칭 마이클 조던</span>
+          <span class="tag ans">분위기 메이커</span>
+        </div>
+      </div>
+
+      <div class="cc" style="grid-column:span 2;">
+        <div class="cn">💬 내가 가장 인상 깊었던 인물은?</div>
+        <div class="cp" style="color:#dc0000;font-weight:900;">▶ 자유 응답 (채점 기준 없음 — 이유가 명확하면 정답)</div>
+        <div class="ctags" style="margin-top:5px;">
+          <span class="tag">강양현</span>
+          <span class="tag">천기범</span>
+          <span class="tag">배규혁</span>
+          <span class="tag">홍순규</span>
+          <span class="tag">정강호</span>
+          <span class="tag">허재윤</span>
+          <span class="tag">정진욱</span>
+        </div>
+        <div class="exp-box">※ 인물 선택 이유를 구체적으로 말할 수 있으면 정답으로 인정하세요.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ⑥ 농구 규칙 -->
+  <div class="sec">
+    <div class="st"><span class="sn">6</span> 영화 속 농구 규칙 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 빨간색 = 정답</span></div>
+    <div class="rg">
+
+      <div class="rc">
+        <div class="rh"><span class="rn">몰수패</span><span class="rb">Forfeit</span></div>
+        <div class="re">선수들이 출전 불가능할 때 적용돼요. 중앙고가 첫 경기에서 이 상황을 당했어요!</div>
+        <div class="rq">🤔 몰수패가 되면 점수는?</div>
+        <div class="rtags">
+          <span class="tag ans">20 : 0</span>
+          <span class="tag">0 : 0</span>
+          <span class="tag">10 : 0</span>
+        </div>
+        <div class="exp-box">패한 팀 0점, 이긴 팀 20점으로 기록</div>
+      </div>
+
+      <div class="rc">
+        <div class="rh"><span class="rn">테크니컬 파울</span><span class="rb">T-Foul</span></div>
+        <div class="re">코치나 선수가 심판에게 거칠게 항의하거나 비신사적인 행동을 하면 선언돼요!</div>
+        <div class="rq">🤔 T파울 몇 개면 코치가 퇴장될까요?</div>
+        <div class="rtags">
+          <span class="tag">1개</span>
+          <span class="tag ans">2개</span>
+          <span class="tag">5개</span>
+        </div>
+        <div class="exp-box">코치에게 T파울 2개 누적 시 퇴장 (FIBA 기준)</div>
+      </div>
+
+      <div class="rc">
+        <div class="rh"><span class="rn">개인 파울 퇴장</span><span class="rb">5 Fouls Out</span></div>
+        <div class="re">한 선수가 파울을 너무 많이 범하면 퇴장됩니다. 선수가 퇴장되면 팀이 불리해져요!</div>
+        <div class="rq">🤔 파울 몇 개면 선수가 퇴장될까요?</div>
+        <div class="rtags">
+          <span class="tag">3개</span>
+          <span class="tag ans">5개</span>
+          <span class="tag">10개</span>
+        </div>
+        <div class="exp-box">FIBA·국내 규정: 5개 퇴장 (NBA는 6개)</div>
+      </div>
+
+      <div class="rc">
+        <div class="rh"><span class="rn">3점 슛 &amp; 리바운드</span><span class="rb">3PT / Rebound</span></div>
+        <div class="re">3점 라인 바깥에서 넣으면 3점, 안쪽은 2점이에요. 슛이 빗나갔을 때 공을 잡는 것이 '리바운드'!</div>
+        <div class="rq">🤔 리바운드는 어떤 순간에 일어날까요?</div>
+        <div class="rtags">
+          <span class="tag ans">슛이 빗나갔을 때</span>
+          <span class="tag">공격이 시작될 때</span>
+          <span class="tag">휴식 시간에</span>
+        </div>
+        <div class="exp-box">슛이 림/백보드에 맞고 튀어오를 때 발생</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pn">2 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 3  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마스포츠 · Cinema Sports</div>
+      <div class="hd-title">🏀 리바운드 <small>명대사 &amp; 생각 넓히기</small></div>
+    </div>
+    <span class="ans-badge">★ 교사용 답안 ★</span>
+  </div>
+
+  <!-- ⑦ 명대사 -->
+  <div class="sec">
+    <div class="st"><span class="sn">7</span> 영화 속 명대사 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 빨간색 = 정답</span></div>
+
+    <div class="qcard" style="margin-bottom:6px;">
+      <div class="qtext">"농구하다 보면 슛 쏴도 안 들어갈 때가 있다. 아니, 안 들어갈 때가 훨씬 많지. 근데 그 순간, 노력에 따라 다시 기회가 생긴다. 그걸 뭐라고 하노?" — "리바운드."</div>
+      <div class="qby">— 강양현 코치 &amp; 홍순규</div>
+      <div class="qq">이 대사에서 '리바운드'가 뜻하는 것은?</div>
+      <div class="tag-row">
+        <span class="tag ans">실패해도 다시 도전하는 것</span>
+        <span class="tag">이기기 위해 달려드는 것</span>
+        <span class="tag">농구 기술 중 하나일 뿐</span>
+      </div>
+      <div class="exp-box">리바운드 = 실패 후 다시 기회를 잡는 것 (삶의 재도전 의미)</div>
+    </div>
+
+    <div class="qcard" style="margin-bottom:6px;">
+      <div class="qtext">"네가 좋아하는 걸 절대 포기하지 말라고."</div>
+      <div class="qby">— 강양현 코치</div>
+      <div class="qq">이 말이 나에게 주는 메시지는?</div>
+      <div class="tag-row">
+        <span class="tag ans">좋아하는 일을 끝까지 해야 한다</span>
+        <span class="tag">농구만 열심히 하면 된다</span>
+        <span class="tag">어른 말을 잘 들어야 한다</span>
+      </div>
+      <div class="exp-box">열정과 끈기로 좋아하는 일을 포기하지 말라는 메시지</div>
+    </div>
+
+    <div class="qcard">
+      <div class="qtext">"남은 경기, 그리고 남은 인생. 겁먹지 말고 달려들어서 다시 잡아내라."</div>
+      <div class="qby">— 강양현 코치</div>
+      <div class="qq">코치가 선수들에게 전하고 싶은 마음은?</div>
+      <div class="tag-row">
+        <span class="tag ans">두려워도 용기 내어 도전하라</span>
+        <span class="tag">농구를 꼭 직업으로 삼아라</span>
+        <span class="tag">경기에서 이기는 것이 전부다</span>
+      </div>
+      <div class="exp-box">경기뿐 아니라 인생 전체에서도 두려움 없이 도전하라는 격려</div>
+    </div>
+  </div>
+
+  <!-- ⑧ 생각해봐요 -->
+  <div class="sec">
+    <div class="st"><span class="sn">8</span> 생각해봐요 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 모범 답안 (자유 응답 허용)</span></div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q1. 중앙고 선수들이 힘든 상황에서도 포기하지 않을 수 있었던 이유는 무엇일까요?</div>
+      <div class="tag-row">
+        <span class="tag ans">서로를 믿는 팀워크</span>
+        <span class="tag ans">코치의 응원과 믿음</span>
+        <span class="tag ans">농구에 대한 순수한 열정</span>
+        <span class="tag ans">모두 위의 것들</span>
+      </div>
+      <div class="exp-box">모두 정답으로 인정 가능. "모두 위의 것들"이 가장 포괄적인 정답.</div>
+    </div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q2. 내가 강양현 코치라면, 첫 경기 몰수패 후 선수들에게 어떤 말을 해줬을까요?</div>
+      <div class="thhint">💡 해당하는 것을 모두 선택하세요.</div>
+      <div class="tag-row">
+        <span class="tag ans">포기하지 마</span>
+        <span class="tag ans">함께 하면 돼</span>
+        <span class="tag ans">실수해도 괜찮아</span>
+        <span class="tag ans">즐기자</span>
+        <span class="tag ans">다시 일어나</span>
+        <span class="tag ans">믿어</span>
+      </div>
+      <div class="exp-box">자유 응답 — 격려·용기·팀워크 관련 응답 모두 정답으로 인정.</div>
+    </div>
+
+    <div class="thcard" style="margin-bottom:6px;">
+      <div class="thq">Q3. 나의 생활에서 '리바운드'가 필요한 순간은 언제일까요? (해당하는 것을 모두 선택)</div>
+      <div class="tag-row">
+        <span class="tag ans">시험에서 실패했을 때</span>
+        <span class="tag ans">친구와 다퉜을 때</span>
+        <span class="tag ans">하고 싶은 게 안 될 때</span>
+        <span class="tag ans">자신감을 잃었을 때</span>
+      </div>
+      <div class="exp-box">자유 응답 — 모두 정답으로 인정. 구체적인 이유가 있으면 더 좋음.</div>
+    </div>
+
+    <div class="thcard">
+      <div class="thq">Q4. 이 영화에서 나에게 가장 인상 깊었던 장면이나 메시지는 무엇인가요?</div>
+      <div class="tag-row">
+        <span class="tag ans">몰수패 후 포기하지 않는 장면</span>
+        <span class="tag ans">선수들이 하나가 되는 장면</span>
+        <span class="tag ans">코치의 진심 어린 응원</span>
+        <span class="tag ans">마지막 경기 장면</span>
+        <span class="tag ans">리바운드라는 말의 의미</span>
+      </div>
+      <div class="exp-box">자유 응답 — 어느 것을 선택해도 정답. 이유를 말할 수 있으면 더 좋음.</div>
+    </div>
+  </div>
+
+  <div class="pn">3 / 4</div>
+</div>
+
+
+<!-- ████  PAGE 4  ████ -->
+<div class="page">
+  <div class="hd">
+    <div class="hd-bar"></div>
+    <div class="hd-left">
+      <div class="hd-sub">시네마스포츠 · Cinema Sports</div>
+      <div class="hd-title">🏀 리바운드 <small>나만의 리바운드 &amp; 감상문</small></div>
+    </div>
+    <span class="ans-badge">★ 교사용 답안 ★</span>
+  </div>
+
+  <!-- ⑨ 나만의 리바운드 -->
+  <div class="rbbox">
+    <div class="rbtitle">🏀 나만의 <strong>리바운드</strong> 순간은?</div>
+    <div class="rbhint">실패하거나 힘들었지만 다시 도전했던 나의 경험을 떠올려 써보세요. (공부·운동·친구 관계 무엇이든 OK!)</div>
+    <div class="tag-row" style="margin-bottom:4px;">
+      <span class="tl">주제 →</span>
+      <span class="tag ans">공부</span>
+      <span class="tag ans">운동/체육</span>
+      <span class="tag ans">친구 관계</span>
+      <span class="tag ans">취미/특기</span>
+      <span class="tag ans">발표/시험</span>
+      <span class="tag ans">가족</span>
+    </div>
+    <div class="exp-box" style="margin-bottom:4px;">※ 자유 응답 — 어떤 주제든 정답. 아래 쓰기 칸에 구체적인 경험을 쓸 수 있으면 OK.</div>
+    <div class="wlines">
+      <div class="wl-md" style="background:linear-gradient(90deg,#fff5f5,#fff);border-bottom-color:#ffb3b3;"></div>
+      <div class="wl-md" style="background:linear-gradient(90deg,#fff5f5,#fff);border-bottom-color:#ffb3b3;"></div>
+      <div class="wl-md" style="background:linear-gradient(90deg,#fff5f5,#fff);border-bottom-color:#ffb3b3;"></div>
+      <div class="wl-md" style="background:linear-gradient(90deg,#fff5f5,#fff);border-bottom-color:#ffb3b3;"></div>
+    </div>
+  </div>
+
+  <!-- ⑩ 감상문 -->
+  <div class="sec" style="flex:1; display:flex; flex-direction:column; gap:6px; min-height:0;">
+    <div class="st"><span class="sn">10</span> 영화 감상문 쓰기 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 아래 모범 구조 참고</span></div>
+    <div class="tipbox">
+      <strong>💡 순서 힌트</strong> &nbsp;
+      ① 영화 소개 &nbsp;→&nbsp; ② 인상 깊은 장면 &nbsp;→&nbsp; ③ 기억나는 대사 &nbsp;→&nbsp; ④ 나에게 주는 메시지
+    </div>
+    <div class="exp-box">
+      【모범 감상문 구조 예시】<br>
+      ① <strong>영화 소개</strong>: 장항준 감독의 2023년 스포츠 드라마 '리바운드'는 2012년 부산중앙고 농구부의 실화를 담은 영화다.<br>
+      ② <strong>인상 깊은 장면</strong>: 첫 경기에서 몰수패를 당한 뒤에도 포기하지 않고 다시 도전하는 장면이 가장 기억에 남는다.<br>
+      ③ <strong>기억나는 대사</strong>: "겁먹지 말고 달려들어서 다시 잡아내라"는 코치의 말이 마음에 남는다.<br>
+      ④ <strong>나에게 주는 메시지</strong>: 실패해도 포기하지 않고 다시 도전하면 기적을 만들 수 있다는 것을 배웠다.
+    </div>
+    <div class="wlines" style="flex:1; min-height:0;">
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+      <div class="wl-es" style="background:#fff5f5;border-bottom-color:#ffcccc;"></div>
+    </div>
+  </div>
+
+  <!-- ⑪ 자기평가 -->
+  <div class="sec" style="flex-shrink:0;">
+    <div class="st"><span class="sn">11</span> 스스로 평가해봐요 <span class="sd" style="color:#dc0000;font-weight:700;">▶ 자유 응답 (학생 자율 평가)</span></div>
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="evrow">
+        <span class="evtxt">영화의 줄거리와 등장인물을 잘 이해했다.</span>
+        <span class="star-ans">★★★★★</span>
+        <span style="font-size:9px;color:#dc0000;font-weight:700;margin-left:6px;">(학생 자율)</span>
+      </div>
+      <div class="evrow">
+        <span class="evtxt">농구 규칙을 영화와 연결해서 설명할 수 있다.</span>
+        <span class="star-ans">★★★★★</span>
+        <span style="font-size:9px;color:#dc0000;font-weight:700;margin-left:6px;">(학생 자율)</span>
+      </div>
+      <div class="evrow">
+        <span class="evtxt">영화의 메시지를 나의 생활과 연결해 생각해보았다.</span>
+        <span class="star-ans">★★★★★</span>
+        <span style="font-size:9px;color:#dc0000;font-weight:700;margin-left:6px;">(학생 자율)</span>
+      </div>
+    </div>
+    <div class="exp-box" style="margin-top:5px;">※ 자기평가는 학생이 스스로 성찰하는 영역입니다. 별점에 따른 채점 없이 참여 여부만 확인하세요.</div>
+  </div>
+
+  <div class="pn">4 / 4</div>
+</div>
+
+</body>
+</html>

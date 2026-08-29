@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>영화 드림 · 정답 확인 PPT</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;
+  --gold2:#F0D080;
+  --ans:#00e5a0;
+  --ans2:#00c87a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;}
+body{font-family:'Noto Serif KR',serif;}
+
+/* ── HUD ── */
+#hud{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 28px;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(16px);
+  border-bottom:2px solid rgba(201,168,76,.3);
+}
+.htitle{color:var(--gold2);font-family:'Nanum Myeongjo',serif;font-size:1.25rem;font-weight:800;letter-spacing:3px;}
+#dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:50%;}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:.3s;}
+.dot.active{background:var(--gold);transform:scale(1.6);}
+.hnum{color:rgba(255,255,255,.45);font-size:.95rem;letter-spacing:1px;min-width:60px;text-align:right;}
+
+/* ── 네비 ── */
+.nav-btn{
+  position:fixed;top:50%;transform:translateY(-50%);z-index:400;
+  width:58px;height:58px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:2px solid rgba(201,168,76,.4);
+  color:rgba(255,255,255,.9);font-size:2rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.3s;user-select:none;
+}
+.nav-btn:hover{background:rgba(201,168,76,.35);transform:translateY(-50%) scale(1.08);}
+#btnPrev{left:12px;}#btnNext{right:12px;}
+
+/* ── 슬라이드 덱 ── */
+#deck{width:100%;height:100%;}
+.slide{
+  position:absolute;inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:80px 90px 40px;
+  overflow:hidden;
+  cursor:pointer;
+}
+.slide.active{display:flex;}
+
+/* ── 배경 테마 ── */
+.bg-cover {background:radial-gradient(ellipse at 30% 40%,#2a1800 0%,#1a0e00 40%,#0a0600 100%);}
+.bg-q1    {background:radial-gradient(ellipse at 70% 30%,#0a1a30 0%,#060e1e 50%,#030810 100%);}
+.bg-q2    {background:radial-gradient(ellipse at 30% 70%,#1a0a28 0%,#100618 50%,#060310 100%);}
+.bg-q3    {background:radial-gradient(ellipse at 60% 40%,#001a14 0%,#000e0a 50%,#000605 100%);}
+.bg-q4    {background:radial-gradient(ellipse at 40% 60%,#1a1000 0%,#100900 50%,#060400 100%);}
+.bg-ox    {background:radial-gradient(ellipse at 50% 30%,#001830 0%,#000e1e 50%,#000510 100%);}
+.bg-char  {background:radial-gradient(ellipse at 35% 65%,#180828 0%,#0e0518 50%,#060210 100%);}
+.bg-ord   {background:radial-gradient(ellipse at 65% 35%,#001a08 0%,#000e04 50%,#000502 100%);}
+.bg-q     {background:radial-gradient(ellipse at 45% 55%,#1a0e08 0%,#100800 50%,#060300 100%);}
+.bg-think {background:radial-gradient(ellipse at 55% 45%,#10001a 0%,#080010 50%,#040008 100%);}
+.bg-end   {background:radial-gradient(ellipse at 50% 50%,#0a1a00 0%,#061000 50%,#020600 100%);}
+
+/* ── 공통 ── */
+.gold-bar{width:70px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 24px;}
+.q-label{
+  font-size:clamp(1.1rem,1.8vw,1.5rem);
+  letter-spacing:.3em;color:var(--gold);font-weight:700;
+  margin-bottom:16px;
+  background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);
+  padding:8px 28px;border-radius:30px;
+  display:inline-block;
+}
+.q-num{
+  font-size:clamp(1rem,1.5vw,1.3rem);
+  color:rgba(255,255,255,.35);
+  letter-spacing:.15em;margin-bottom:10px;
+}
+
+/* ── 표지 ── */
+.cover-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;}
+.cover-emoji{font-size:clamp(6rem,12vw,10rem);line-height:1;filter:drop-shadow(0 0 40px rgba(201,168,76,.4));}
+.cover-title{font-family:'Nanum Myeongjo',serif;font-size:clamp(4rem,8vw,8rem);font-weight:800;color:#fff;letter-spacing:.12em;line-height:1;text-shadow:0 0 60px rgba(201,168,76,.45);}
+.cover-sub{font-size:clamp(1.4rem,2.5vw,2.2rem);color:var(--gold);letter-spacing:.4em;font-weight:300;}
+.cover-desc{font-size:clamp(1rem,1.8vw,1.5rem);color:rgba(255,255,255,.45);letter-spacing:.1em;font-weight:300;}
+.cover-hint{font-size:clamp(.9rem,1.5vw,1.3rem);color:rgba(255,255,255,.3);margin-top:8px;display:flex;align-items:center;gap:10px;}
+.pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8);}50%{opacity:1;transform:scale(1.2);}}
+
+/* ── 문제 공통 ── */
+.q-box{
+  width:100%;max-width:960px;
+  background:rgba(255,255,255,.04);
+  border:2px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:clamp(28px,4vh,52px) clamp(32px,5vw,64px);
+  display:flex;flex-direction:column;gap:clamp(18px,3vh,32px);
+  cursor:pointer;
+  transition:border-color .3s;
+  position:relative;
+  overflow:hidden;
+}
+.q-box::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,.04),transparent 60%);
+  pointer-events:none;
+}
+.q-box:hover{border-color:rgba(201,168,76,.35);}
+
+.q-text{
+  font-size:clamp(2rem,3.8vw,3.8rem);
+  color:rgba(255,255,255,.92);
+  line-height:1.55;
+  font-weight:400;
+  letter-spacing:.03em;
+}
+.q-text b{color:var(--gold2);font-weight:800;}
+.q-text em{color:rgba(255,255,255,.5);font-style:normal;font-size:.75em;}
+
+.ans-area{
+  display:flex;flex-direction:column;gap:14px;
+}
+.ans-row{
+  display:flex;align-items:center;gap:18px;
+  padding:clamp(16px,2.5vh,26px) clamp(20px,3vw,36px);
+  border-radius:16px;
+  background:rgba(0,229,160,.0);
+  border:2px solid rgba(255,255,255,.08);
+  transition:.4s;
+  cursor:pointer;
+}
+.ans-row.revealed{
+  background:rgba(0,229,160,.12);
+  border-color:rgba(0,229,160,.4);
+  box-shadow:0 0 30px rgba(0,229,160,.12);
+}
+.ans-row.wrong-ans{
+  background:rgba(255,80,80,.1);
+  border-color:rgba(255,80,80,.3);
+}
+.ans-icon{
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  flex-shrink:0;
+  width:clamp(44px,5vw,60px);
+  height:clamp(44px,5vw,60px);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.12);
+  transition:.4s;
+}
+.ans-row.revealed .ans-icon{
+  background:rgba(0,229,160,.2);
+  border-color:rgba(0,229,160,.5);
+}
+.ans-num{
+  font-size:clamp(1.3rem,2.2vw,2rem);
+  font-weight:900;
+  color:rgba(255,255,255,.3);
+  min-width:clamp(30px,3vw,44px);
+  flex-shrink:0;
+  transition:.4s;
+}
+.ans-row.revealed .ans-num{color:var(--ans);}
+.ans-content{flex:1;}
+.ans-q{
+  font-size:clamp(1.5rem,2.5vw,2.5rem);
+  color:rgba(255,255,255,.65);
+  line-height:1.4;
+  margin-bottom:4px;
+  font-weight:300;
+}
+.ans-a{
+  font-size:clamp(1.8rem,3vw,3rem);
+  color:transparent;
+  font-weight:900;
+  line-height:1.3;
+  transition:.5s;
+  font-family:'Nanum Myeongjo',serif;
+  letter-spacing:.04em;
+}
+.ans-row.revealed .ans-a{color:var(--ans);}
+.ans-badge{
+  font-size:clamp(.85rem,1.3vw,1.1rem);
+  background:rgba(0,229,160,.15);
+  border:1px solid rgba(0,229,160,.35);
+  color:var(--ans);
+  padding:4px 14px;border-radius:20px;
+  margin-top:6px;display:inline-block;
+  opacity:0;transition:.4s .1s;
+}
+.ans-row.revealed .ans-badge{opacity:1;}
+
+/* ── OX 전용 ── */
+.ox-list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:960px;}
+.ox-item{
+  display:flex;align-items:center;gap:20px;
+  padding:clamp(14px,2.2vh,22px) clamp(20px,3vw,36px);
+  border-radius:16px;background:rgba(255,255,255,.04);
+  border:2px solid rgba(255,255,255,.08);
+  cursor:pointer;transition:.4s;
+}
+.ox-item:hover{border-color:rgba(255,255,255,.18);}
+.ox-num{font-size:clamp(1.3rem,2.2vw,2rem);font-weight:900;color:rgba(255,255,255,.3);min-width:36px;flex-shrink:0;}
+.ox-qt{font-size:clamp(1.4rem,2.2vw,2.2rem);color:rgba(255,255,255,.75);flex:1;line-height:1.45;font-weight:300;}
+.ox-ans{
+  font-size:clamp(2rem,3.5vw,3.5rem);
+  font-weight:900;
+  color:transparent;
+  min-width:clamp(60px,7vw,90px);
+  text-align:center;
+  flex-shrink:0;
+  transition:.4s;
+  font-family:'Nanum Myeongjo',serif;
+}
+.ox-item.show-o .ox-ans{color:#00e5a0;}
+.ox-item.show-x .ox-ans{color:#ff6b6b;}
+.ox-item.show-o{background:rgba(0,229,160,.08);border-color:rgba(0,229,160,.35);}
+.ox-item.show-x{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.3);}
+.ox-exp{
+  font-size:clamp(.9rem,1.4vw,1.2rem);
+  color:rgba(255,255,255,.35);
+  display:none;margin-top:5px;line-height:1.6;
+}
+.ox-item.show-o .ox-exp,.ox-item.show-x .ox-exp{display:block;}
+.ox-item.show-o .ox-exp{color:rgba(0,229,160,.65);}
+.ox-item.show-x .ox-exp{color:rgba(255,107,107,.65);}
+
+/* ── 순서 배열 전용 ── */
+.ord-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:1000px;}
+.ord-card{
+  background:rgba(255,255,255,.04);border:2px dashed rgba(255,255,255,.12);
+  border-radius:18px;padding:clamp(18px,2.8vh,30px) clamp(16px,2.5vw,26px);
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  cursor:pointer;transition:.4s;
+}
+.ord-card:hover{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06);}
+.ord-card.revealed{
+  background:rgba(0,229,160,.08);border-color:rgba(0,229,160,.4);
+  border-style:solid;
+}
+.ord-circle{
+  width:clamp(54px,6vw,72px);height:clamp(54px,6vw,72px);
+  border-radius:50%;border:2.5px solid rgba(201,168,76,.35);
+  background:rgba(201,168,76,.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;
+  color:transparent;transition:.4s;
+  font-family:'Nanum Myeongjo',serif;
+}
+.ord-card.revealed .ord-circle{
+  color:var(--ans);
+  border-color:rgba(0,229,160,.6);
+  background:rgba(0,229,160,.12);
+}
+.ord-txt{
+  font-size:clamp(1.1rem,1.8vw,1.8rem);
+  color:rgba(255,255,255,.65);
+  text-align:center;line-height:1.55;font-weight:300;
+}
+
+/* ── 등장인물 전용 ── */
+.char-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%;max-width:1000px;}
+.char-card-q{
+  background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);
+  border-radius:18px;padding:clamp(18px,2.8vh,28px) clamp(14px,2vw,22px);
+  display:flex;flex-direction:column;gap:10px;
+  cursor:pointer;transition:.4s;
+}
+.char-card-q:hover{border-color:rgba(201,168,76,.35);}
+.char-card-q.revealed{background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.35);}
+.char-name-q{font-size:clamp(1.5rem,2.5vw,2.4rem);font-weight:900;color:#fff;font-family:'Nanum Myeongjo',serif;}
+.char-role-q{font-size:clamp(.85rem,1.3vw,1.1rem);background:#1a1a2e;color:var(--gold);border-radius:6px;padding:3px 10px;width:fit-content;}
+.char-desc-q{font-size:clamp(1rem,1.6vw,1.6rem);color:rgba(255,255,255,.5);line-height:1.6;font-weight:300;}
+.char-tags-q{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.ctag-q{
+  font-size:clamp(.95rem,1.5vw,1.4rem);font-weight:700;
+  padding:5px 14px;border-radius:14px;
+  border:1.5px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:transparent;
+  transition:.4s;
+}
+.char-card-q.revealed .ctag-q{color:var(--ans);border-color:rgba(0,229,160,.4);background:rgba(0,229,160,.1);}
+
+/* ── 명대사 전용 ── */
+.quote-box{
+  width:100%;max-width:940px;
+  background:rgba(255,255,255,.04);
+  border:2px solid rgba(201,168,76,.2);
+  border-left:6px solid var(--gold);
+  border-radius:24px;
+  padding:clamp(28px,4vh,50px) clamp(32px,5vw,60px);
+  display:flex;flex-direction:column;gap:20px;
+  cursor:pointer;
+  transition:.4s;
+}
+.quote-box:hover{border-color:rgba(201,168,76,.4);}
+.quote-mark{font-size:clamp(4rem,7vw,7rem);color:rgba(255,255,255,.08);line-height:.8;margin-bottom:-8px;}
+.quote-text{font-size:clamp(2rem,3.5vw,3.5rem);font-weight:700;color:#fff;line-height:1.5;font-family:'Nanum Myeongjo',serif;}
+.quote-by{font-size:clamp(1rem,1.6vw,1.4rem);color:rgba(255,255,255,.35);font-weight:300;letter-spacing:.1em;}
+.quote-q{font-size:clamp(1.3rem,2vw,2rem);color:var(--gold);font-weight:700;border-top:1px solid rgba(255,255,255,.1);padding-top:16px;}
+.quote-ans{
+  font-size:clamp(1.6rem,2.6vw,2.6rem);font-weight:900;
+  color:transparent;
+  font-family:'Nanum Myeongjo',serif;
+  transition:.5s;letter-spacing:.02em;
+  line-height:1.4;
+}
+.quote-box.revealed .quote-ans{color:var(--ans);}
+.quote-sub{
+  font-size:clamp(1rem,1.6vw,1.5rem);color:transparent;
+  font-weight:300;line-height:1.7;transition:.5s .1s;
+}
+.quote-box.revealed .quote-sub{color:rgba(0,229,160,.7);}
+.click-hint{
+  font-size:clamp(.9rem,1.4vw,1.2rem);
+  color:rgba(255,255,255,.25);
+  display:flex;align-items:center;gap:8px;
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:.3;}50%{opacity:.8;}}
+
+/* ── 생각해봐요 전용 ── */
+.think-box{
+  width:100%;max-width:940px;
+  display:flex;flex-direction:column;gap:clamp(14px,2.2vh,24px);
+}
+.think-item{
+  background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);
+  border-radius:18px;padding:clamp(16px,2.5vh,28px) clamp(20px,3vw,36px);
+  cursor:pointer;transition:.4s;
+}
+.think-item:hover{border-color:rgba(255,255,255,.2);}
+.think-item.revealed{background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.35);}
+.think-qtext{font-size:clamp(1.5rem,2.5vw,2.5rem);color:rgba(255,255,255,.75);font-weight:400;line-height:1.45;margin-bottom:10px;}
+.think-atext{
+  font-size:clamp(1.6rem,2.7vw,2.7rem);font-weight:900;
+  color:transparent;font-family:'Nanum Myeongjo',serif;
+  transition:.5s;letter-spacing:.02em;
+}
+.think-item.revealed .think-atext{color:var(--ans);}
+.think-sub{font-size:clamp(1rem,1.6vw,1.5rem);color:transparent;font-weight:300;transition:.5s .1s;line-height:1.6;}
+.think-item.revealed .think-sub{color:rgba(0,229,160,.6);}
+
+/* ── 마무리 ── */
+.end-wrap{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;}
+.end-emoji{font-size:clamp(5rem,10vw,9rem);filter:drop-shadow(0 0 40px rgba(0,229,160,.3));}
+.end-title{font-family:'Nanum Myeongjo',serif;font-size:clamp(3rem,6vw,6rem);font-weight:800;color:#fff;letter-spacing:.1em;text-shadow:0 0 40px rgba(201,168,76,.3);}
+.end-sub{font-size:clamp(1.2rem,2vw,1.8rem);color:rgba(255,255,255,.55);line-height:1.9;letter-spacing:.05em;}
+.end-sub b{color:var(--gold2);font-weight:700;}
+
+/* ── 파티클 ── */
+.particle{position:fixed;pointer-events:none;z-index:9999;font-size:1.2rem;animation:pfly 1.2s ease-out forwards;}
+@keyframes pfly{0%{opacity:1;transform:translateY(0)scale(1);}100%{opacity:0;transform:translateY(-100px)scale(.05);}}
+
+/* ── 전체 클릭 힌트 ── */
+.global-hint{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  font-size:clamp(.8rem,1.2vw,1rem);color:rgba(255,255,255,.2);
+  letter-spacing:.15em;z-index:300;pointer-events:none;
+  display:flex;align-items:center;gap:8px;
+}
+</style>
+</head>
+<body>
+
+<div id="hud">
+  <span class="htitle">⚽ 드림 · 정답 확인</span>
+  <div id="dots"></div>
+  <span class="hnum" id="hnum">1 / 18</span>
+</div>
+<button class="nav-btn" id="btnPrev" onclick="move(-1)">&#8592;</button>
+<button class="nav-btn" id="btnNext" onclick="move(1)">&#8594;</button>
+<div class="global-hint"><span class="pulse-dot" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;"></span>화면을 클릭하면 답이 나타납니다 &nbsp;·&nbsp; ← → 키로 이동</div>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════
+  S0 : 표지
+══════════════════════════════════ -->
+<div class="slide bg-cover active" id="s0">
+  <div class="cover-wrap">
+    <div class="cover-emoji">⚽</div>
+    <div class="cover-title">드림</div>
+    <div class="cover-sub">DREAM · 2023</div>
+    <div class="gold-bar" style="margin:8px auto 4px;width:100px;height:3px;"></div>
+    <div class="cover-desc">활동지 정답 확인 PPT</div>
+    <div class="cover-hint">
+      <span class="pulse-dot"></span>
+      화면 클릭 or ← → 키로 이동 · 각 문제를 클릭하면 정답이 나타납니다
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S1 : 빈칸①  — 축구
+══════════════════════════════════ -->
+<div class="slide bg-q1" id="s1" onclick="revealAll(this)">
+  <div class="q-label">빈칸 채우기</div>
+  <div class="q-num">문제 ①</div>
+  <div class="gold-bar"></div>
+  <div class="q-box" style="max-width:900px;gap:24px;">
+    <div class="q-text">
+      윤홍대는 프로 <b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#93;</b> 선수였으나<br/>기자 폭행으로 이미지가 추락했다.
+    </div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target">
+        <div class="ans-icon">⚽</div>
+        <div class="ans-content">
+          <div class="ans-a" style="font-size:clamp(3rem,5.5vw,5.5rem);">축구</div>
+          <div class="ans-badge">✅ 정답</div>
+        </div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S2 : 빈칸② — 홈리스 풋볼 월드컵
+══════════════════════════════════ -->
+<div class="slide bg-q2" id="s2" onclick="revealAll(this)">
+  <div class="q-label">빈칸 채우기</div>
+  <div class="q-num">문제 ②</div>
+  <div class="gold-bar"></div>
+  <div class="q-box" style="max-width:900px;">
+    <div class="q-text">
+      홍대는 사회봉사로<br/><b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#93;</b><br/>국가대표 감독을 맡게 된다.
+    </div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target">
+        <div class="ans-icon">🌐</div>
+        <div class="ans-content">
+          <div class="ans-a" style="font-size:clamp(2.5rem,4.5vw,4.5rem);">홈리스 풋볼 월드컵</div>
+          <div class="ans-badge">✅ 정답</div>
+        </div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S3 : 빈칸③ — PD / 다큐 촬영
+══════════════════════════════════ -->
+<div class="slide bg-q3" id="s3" onclick="revealAll(this)">
+  <div class="q-label">빈칸 채우기</div>
+  <div class="q-num">문제 ③</div>
+  <div class="gold-bar"></div>
+  <div class="q-box" style="max-width:900px;">
+    <div class="q-text">
+      이소민(아이유)의 직업은 <b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&#93;</b>이며,<br/>이 팀을 <b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#93;</b> 하러 합류한다.
+    </div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target" style="gap:32px;">
+        <div class="ans-icon">🎥</div>
+        <div class="ans-content">
+          <div class="ans-q" style="font-size:clamp(1.2rem,2vw,1.8rem);">직업</div>
+          <div class="ans-a" style="font-size:clamp(2.5rem,4.5vw,4.5rem);">PD</div>
+        </div>
+        <div style="width:2px;background:rgba(255,255,255,.08);align-self:stretch;flex-shrink:0;"></div>
+        <div class="ans-content">
+          <div class="ans-q" style="font-size:clamp(1.2rem,2vw,1.8rem);">목적</div>
+          <div class="ans-a" style="font-size:clamp(2rem,3.8vw,3.8rem);">다큐 촬영</div>
+        </div>
+        <div class="ans-badge" style="align-self:flex-end;">✅ 정답</div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S4 : 빈칸④ — 헝가리 / 2010
+══════════════════════════════════ -->
+<div class="slide bg-q4" id="s4" onclick="revealAll(this)">
+  <div class="q-label">빈칸 채우기</div>
+  <div class="q-num">문제 ④</div>
+  <div class="gold-bar"></div>
+  <div class="q-box" style="max-width:900px;">
+    <div class="q-text">
+      대회 개최 장소는 <b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&nbsp;&nbsp;&#93;</b>이고,<br/>이 영화는 <b style="color:var(--gold2);">&#91;&nbsp;&nbsp;&nbsp;&nbsp;&#93;</b>년 실화를 바탕으로 한다.
+    </div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target" style="gap:32px;">
+        <div class="ans-icon">🇭🇺</div>
+        <div class="ans-content">
+          <div class="ans-q" style="font-size:clamp(1.2rem,2vw,1.8rem);">개최 장소</div>
+          <div class="ans-a" style="font-size:clamp(2.5rem,4.5vw,4.5rem);">헝가리</div>
+        </div>
+        <div style="width:2px;background:rgba(255,255,255,.08);align-self:stretch;flex-shrink:0;"></div>
+        <div class="ans-content">
+          <div class="ans-q" style="font-size:clamp(1.2rem,2vw,1.8rem);">실화 연도</div>
+          <div class="ans-a" style="font-size:clamp(2.5rem,4.5vw,4.5rem);">2010년</div>
+        </div>
+        <div class="ans-badge" style="align-self:flex-end;">✅ 정답</div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S5 : OX 퀴즈 (5문항 한 화면)
+══════════════════════════════════ -->
+<div class="slide bg-ox" id="s5">
+  <div class="q-label">OX 퀴즈</div>
+  <div class="q-num">문제 1~5 · 클릭하면 답이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="ox-list">
+    <div class="ox-item" onclick="revealOX(this,'X','❌ X | 홧김에 기자를 폭행해 사회봉사 명령으로 떠맡게 됩니다.');event.stopPropagation();">
+      <span class="ox-num">①</span>
+      <div style="flex:1;">
+        <div class="ox-qt">윤홍대는 자원해서 홈리스 월드컵 감독직을 맡았다.</div>
+        <div class="ox-exp">❌ X — 홧김에 기자를 폭행한 사건으로 사회봉사 명령을 받아 어쩔 수 없이 맡게 됩니다.</div>
+      </div>
+      <div class="ox-ans">X</div>
+    </div>
+    <div class="ox-item" onclick="revealOX(this,'O','✅ O | 이소민은 다큐멘터리 촬영을 위해 합류한 현실파 PD입니다.');event.stopPropagation();">
+      <span class="ox-num">②</span>
+      <div style="flex:1;">
+        <div class="ox-qt">이소민은 이 팀의 다큐멘터리를 찍기 위해 합류한 PD이다.</div>
+        <div class="ox-exp">✅ O — 냉소적인 현실파 PD로, 다큐멘터리 촬영을 목적으로 합류합니다.</div>
+      </div>
+      <div class="ox-ans">O</div>
+    </div>
+    <div class="ox-item" onclick="revealOX(this,'O','✅ O | 2010년 대한민국이 처음 출전한 홈리스 월드컵이 실화 바탕입니다.');event.stopPropagation();">
+      <span class="ox-num">③</span>
+      <div style="flex:1;">
+        <div class="ox-qt">이 영화는 2010년 대한민국이 첫 출전한 홈리스 월드컵 실화를 바탕으로 한다.</div>
+        <div class="ox-exp">✅ O — 2010년 대한민국 홈리스 월드컵 첫 출전 실화를 모티브로 제작되었습니다.</div>
+      </div>
+      <div class="ox-ans">O</div>
+    </div>
+    <div class="ox-item" onclick="revealOX(this,'X','❌ X | 선수들은 운동 경험조차 없는 노숙인들입니다.');event.stopPropagation();">
+      <span class="ox-num">④</span>
+      <div style="flex:1;">
+        <div class="ox-qt">홈리스 월드컵 선수들은 모두 프로 축구 출신이다.</div>
+        <div class="ox-exp">❌ X — 선수들은 축구 경험이 전혀 없는 노숙인들입니다. 그래서 훈련이 엉망입니다!</div>
+      </div>
+      <div class="ox-ans">X</div>
+    </div>
+    <div class="ox-item" onclick="revealOX(this,'O','✅ O | 이병헌 감독은 극한직업(2019)으로 1,600만 관객을 동원했습니다.');event.stopPropagation();">
+      <span class="ox-num">⑤</span>
+      <div style="flex:1;">
+        <div class="ox-qt">감독 이병헌은 영화 '극한직업'을 연출한 감독과 동일인물이다.</div>
+        <div class="ox-exp">✅ O — 누적 관객 1,600만 명을 기록한 극한직업(2019)을 연출한 이병헌 감독의 작품입니다.</div>
+      </div>
+      <div class="ox-ans">O</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S6 : 등장인물 — 윤홍대
+══════════════════════════════════ -->
+<div class="slide bg-char" id="s6" onclick="revealChars(this)">
+  <div class="q-label">등장인물 알아보기</div>
+  <div class="q-num">클릭하면 특징이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="char-wrap">
+    <div class="char-card-q reveal-char">
+      <div class="char-name-q">윤홍대</div>
+      <div class="char-role-q">주인공 · 감독 / 박서준</div>
+      <div class="char-desc-q">이 인물의 특징은?</div>
+      <div class="char-tags-q">
+        <span class="ctag-q">프로 축구선수 출신</span>
+        <span class="ctag-q">기자 폭행 사건</span>
+        <span class="ctag-q">마지못해 감독 수락</span>
+      </div>
+    </div>
+    <div class="char-card-q reveal-char">
+      <div class="char-name-q">이소민</div>
+      <div class="char-role-q">여주인공 · PD / 아이유</div>
+      <div class="char-desc-q">이 인물의 특징은?</div>
+      <div class="char-tags-q">
+        <span class="ctag-q">열정 없는 현실파</span>
+        <span class="ctag-q">다큐 촬영 합류</span>
+        <span class="ctag-q">냉소적이지만 성실</span>
+      </div>
+    </div>
+    <div class="char-card-q reveal-char">
+      <div class="char-name-q">홈리스 선수단</div>
+      <div class="char-role-q">조연 / 김종수·고창석 外</div>
+      <div class="char-desc-q">이 인물들의 특징은?</div>
+      <div class="char-tags-q">
+        <span class="ctag-q">각자 사연 보유</span>
+        <span class="ctag-q">축구 경험 없음</span>
+        <span class="ctag-q">팀워크 부재</span>
+      </div>
+    </div>
+    <div class="char-card-q reveal-char">
+      <div class="char-name-q">전효봉</div>
+      <div class="char-role-q">노숙인 선수 / 고창석</div>
+      <div class="char-desc-q">이 선수의 특징은?</div>
+      <div class="char-tags-q">
+        <span class="ctag-q">딸과의 애틋한 부녀</span>
+        <span class="ctag-q">감초 역할</span>
+        <span class="ctag-q">웃음 담당</span>
+      </div>
+    </div>
+    <div class="char-card-q reveal-char">
+      <div class="char-name-q">박성찬</div>
+      <div class="char-role-q">특별출연 / 강하늘</div>
+      <div class="char-desc-q">이 인물의 특징은?</div>
+      <div class="char-tags-q">
+        <span class="ctag-q">유명 프로 선수</span>
+        <span class="ctag-q">홍대의 과거 동료</span>
+        <span class="ctag-q">카메오 출연</span>
+      </div>
+    </div>
+    <div class="char-card-q" style="background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);justify-content:center;align-items:center;">
+      <div style="font-size:clamp(2.5rem,4vw,4rem);">⚽</div>
+      <div style="font-size:clamp(1.2rem,2vw,1.8rem);color:var(--gold);font-weight:700;text-align:center;margin-top:8px;">모두 5명의<br/>주요 인물!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S7 : 이야기 순서 배열
+══════════════════════════════════ -->
+<div class="slide bg-ord" id="s7" onclick="revealOrds(this)">
+  <div class="q-label">이야기 순서 배열</div>
+  <div class="q-num">클릭하면 순서 번호가 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="ord-wrap">
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">③</div>
+      <div class="ord-txt">홈리스 선수들과 함께 훈련을 시작하지만 팀워크는 엉망이다.</div>
+    </div>
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">①</div>
+      <div class="ord-txt">프로 축구선수 윤홍대가 기자 폭행 사건으로 이미지가 추락한다.</div>
+    </div>
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">⑤</div>
+      <div class="ord-txt">대회에 출전해 각 나라 팀들과 경기를 펼치며 성장해 나간다.</div>
+    </div>
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">②</div>
+      <div class="ord-txt">사회봉사 명령으로 홈리스 월드컵 감독을 마지못해 맡게 된다.</div>
+    </div>
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">④</div>
+      <div class="ord-txt">갈등을 겪으면서도 선수들과 서로를 이해하며 하나가 되어간다.</div>
+    </div>
+    <div class="ord-card reveal-ord">
+      <div class="ord-circle">⑥</div>
+      <div class="ord-txt">홈리스 선수들이 꿈을 향해 나아가는 감동적인 결말을 맞이한다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S8 : 홈리스 월드컵 Q1
+══════════════════════════════════ -->
+<div class="slide bg-q1" id="s8" onclick="revealAll(this)">
+  <div class="q-label">홈리스 월드컵이란?</div>
+  <div class="q-num">Q1</div>
+  <div class="gold-bar"></div>
+  <div class="q-box">
+    <div class="q-text">홈리스 월드컵은 어떤 대회일까요?</div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target">
+        <div class="ans-icon">🏆</div>
+        <div class="ans-content">
+          <div class="ans-a" style="font-size:clamp(2rem,3.5vw,3.5rem);">노숙인들이 참가하는 국제 축구 대회</div>
+          <div class="ans-badge">✅ 정답</div>
+        </div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S9 : 홈리스 월드컵 Q2
+══════════════════════════════════ -->
+<div class="slide bg-q2" id="s9" onclick="revealAll(this)">
+  <div class="q-label">홈리스 월드컵이란?</div>
+  <div class="q-num">Q2</div>
+  <div class="gold-bar"></div>
+  <div class="q-box">
+    <div class="q-text">대한민국이 처음 홈리스 월드컵에 출전한 연도는?</div>
+    <div class="ans-area">
+      <div class="ans-row reveal-target">
+        <div class="ans-icon">🗓️</div>
+        <div class="ans-content">
+          <div class="ans-a" style="font-size:clamp(3.5rem,6vw,6rem);">2010년</div>
+          <div class="ans-badge">✅ 정답 — 브라질 대회에 첫 출전!</div>
+        </div>
+      </div>
+    </div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S10 : 명대사 ①
+══════════════════════════════════ -->
+<div class="slide bg-q" id="s10" onclick="revealQuote(this)">
+  <div class="q-label">영화 속 명대사 ①</div>
+  <div class="gold-bar"></div>
+  <div class="quote-box">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">"꿈이 있으면 도전해야 합니다.<br/>지금 어디에 있든 상관없어요."</div>
+    <div class="quote-by">— 윤홍대 감독</div>
+    <div class="quote-q">❓ 이 대사가 전하는 핵심 메시지는?</div>
+    <div class="quote-ans">현재 상황과 관계없이 꿈을 향해 도전할 수 있다</div>
+    <div class="quote-sub">현재 처한 환경이나 조건에 관계없이 꿈을 꾸고 도전하는 것이 중요하다는 메시지입니다.</div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S11 : 명대사 ②
+══════════════════════════════════ -->
+<div class="slide bg-q3" id="s11" onclick="revealQuote(this)">
+  <div class="q-label">영화 속 명대사 ②</div>
+  <div class="gold-bar"></div>
+  <div class="quote-box">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">"결과보다 과정이 더 중요할 수 있어."</div>
+    <div class="quote-by">— 이소민 PD</div>
+    <div class="quote-q">❓ 이소민이 이 말을 한 이유는?</div>
+    <div class="quote-ans">선수들의 도전 과정이 이미 가치 있다고 느꼈기 때문</div>
+    <div class="quote-sub">승리나 결과만이 아닌, 도전하고 성장하는 과정 자체가 가치 있다는 것을 깨달은 소민의 말입니다.</div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S12 : 명대사 ③
+══════════════════════════════════ -->
+<div class="slide bg-q4" id="s12" onclick="revealQuote(this)">
+  <div class="q-label">영화 속 명대사 ③</div>
+  <div class="gold-bar"></div>
+  <div class="quote-box">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">"이번 한 번만, 제대로 한 번만 뛰어보자."</div>
+    <div class="quote-by">— 홈리스 선수들</div>
+    <div class="quote-q">❓ 선수들이 이 대사에서 원하는 것은?</div>
+    <div class="quote-ans">인생에서 단 한 번 진심을 다한 도전을 하고 싶다</div>
+    <div class="quote-sub">집도 직업도 없지만, 인생에서 딱 한 번이라도 온 마음을 다한 도전을 하고 싶다는 간절한 외침입니다.</div>
+    <div class="click-hint"><span class="pulse-dot"></span> 클릭하면 정답이 나타납니다</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S13 : 생각해봐요 Q1
+══════════════════════════════════ -->
+<div class="slide bg-think" id="s13" onclick="revealThinks(this)">
+  <div class="q-label">생각해봐요</div>
+  <div class="q-num">Q1 · 클릭하면 예시 답안이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="think-box" style="max-width:900px;">
+    <div class="think-item reveal-think">
+      <div class="think-qtext">윤홍대(박서준)가 처음엔 싫어했지만 결국 선수들과 하나가 될 수 있었던 이유는?</div>
+      <div class="think-atext">선수들의 진심 어린 노력과 사연에 감동받아서</div>
+      <div class="think-sub">각자의 아픔을 가진 선수들의 진심 어린 도전 의지에 홍대도 마음이 움직이기 시작했습니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S14 : 생각해봐요 Q2
+══════════════════════════════════ -->
+<div class="slide bg-q2" id="s14" onclick="revealThinks(this)">
+  <div class="q-label">생각해봐요</div>
+  <div class="q-num">Q2 · 클릭하면 예시 답안이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="think-box" style="max-width:900px;">
+    <div class="think-item reveal-think">
+      <div class="think-qtext">이소민(아이유)이 변화하게 된 계기는?</div>
+      <div class="think-atext">선수들의 삶에 공감 / 도전 과정 목격 / 홍대의 진지함</div>
+      <div class="think-sub">선수들의 삶에 진심으로 공감하고, 가까이서 도전 과정을 목격하며, 홍대의 진지함에도 영향을 받았습니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S15 : 생각해봐요 Q3
+══════════════════════════════════ -->
+<div class="slide bg-q3" id="s15" onclick="revealThinks(this)">
+  <div class="q-label">생각해봐요</div>
+  <div class="q-num">Q3 · 클릭하면 예시 답안이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="think-box" style="max-width:900px;">
+    <div class="think-item reveal-think">
+      <div class="think-qtext">영화 제목 '드림(Dream)'이 뜻하는 것은?</div>
+      <div class="think-atext">소외된 사람도 꿈꿀 권리가 있다는 메시지</div>
+      <div class="think-sub">집도 직업도 없는 노숙인들도 꿈을 꾸고 도전할 수 있다는 것을 보여주는 제목입니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S16 : 생각해봐요 Q4
+══════════════════════════════════ -->
+<div class="slide bg-q4" id="s16" onclick="revealThinks(this)">
+  <div class="q-label">생각해봐요</div>
+  <div class="q-num">Q4 · 클릭하면 예시 답안이 나타납니다</div>
+  <div class="gold-bar"></div>
+  <div class="think-box" style="max-width:900px;">
+    <div class="think-item reveal-think">
+      <div class="think-qtext">가장 인상 깊었던 장면이나 메시지는?</div>
+      <div class="think-atext">홍대가 선수들을 진심으로 응원하는 장면</div>
+      <div class="think-sub">※ 이 문항은 정해진 정답이 없습니다. 자신의 느낌을 솔직하게 적은 것이 모두 정답입니다! 🎉</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  S17 : 마무리
+══════════════════════════════════ -->
+<div class="slide bg-end" id="s17">
+  <div class="end-wrap">
+    <div class="end-emoji">⚽</div>
+    <div class="end-title">수고했어요!</div>
+    <div class="gold-bar" style="width:100px;height:3px;margin:0 auto;"></div>
+    <div class="end-sub">
+      <b>"꿈이 있으면 도전해야 합니다.</b><br/>
+      지금 어디에 있든 상관없어요."<br/><br/>
+      — 영화 드림(Dream, 2023) —<br/><br/>
+      <span style="font-size:.85em;color:rgba(255,255,255,.35);">감독 이병헌 &nbsp;·&nbsp; 주연 박서준 · 아이유 &nbsp;·&nbsp; 2023년 개봉</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+const TOTAL = 18;
+let cur = 0;
+
+/* ── 도트 생성 ── */
+const dotsEl = document.getElementById('dots');
+for(let i = 0; i < TOTAL; i++){
+  const d = document.createElement('span');
+  d.className = 'dot' + (i===0?' active':'');
+  d.onclick = e => { e.stopPropagation(); goSlide(i); };
+  dotsEl.appendChild(d);
+}
+
+function updateHUD(){
+  document.getElementById('hnum').textContent = (cur+1)+' / '+TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+}
+
+function goSlide(n){
+  document.getElementById('s'+cur).classList.remove('active');
+  cur = Math.max(0, Math.min(TOTAL-1, n));
+  document.getElementById('s'+cur).classList.add('active');
+  updateHUD();
+  beep(440, .05, 'square', .08);
+}
+
+function move(d){ goSlide(cur + d); }
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight' || e.key===' ') move(1);
+  if(e.key==='ArrowLeft') move(-1);
+});
+
+/* ── 빈칸/단일 reveal ── */
+function revealAll(slide){
+  slide.querySelectorAll('.reveal-target').forEach(r => {
+    r.classList.add('revealed');
+    spark(r);
+  });
+  slide.querySelectorAll('.click-hint').forEach(h => h.style.opacity='0');
+  playOk();
+}
+
+/* ── OX 개별 클릭 ── */
+function revealOX(item, ans, expTxt){
+  if(ans === 'O'){
+    item.classList.add('show-o');
+    item.querySelector('.ox-ans').textContent = 'O';
+  } else {
+    item.classList.add('show-x');
+    item.querySelector('.ox-ans').textContent = 'X';
+  }
+  spark(item.querySelector('.ox-ans'));
+  playOk();
+}
+
+/* ── 등장인물 reveal ── */
+function revealChars(slide){
+  slide.querySelectorAll('.reveal-char').forEach(c => {
+    c.classList.add('revealed');
+  });
+  spark(slide.querySelector('.char-wrap'));
+  playOk();
+}
+
+/* ── 순서 배열 reveal ── */
+function revealOrds(slide){
+  slide.querySelectorAll('.reveal-ord').forEach(c => {
+    c.classList.add('revealed');
+    spark(c.querySelector('.ord-circle'));
+  });
+  playOk();
+}
+
+/* ── 명대사 reveal ── */
+function revealQuote(slide){
+  const box = slide.querySelector('.quote-box');
+  if(box) {
+    box.classList.add('revealed');
+    spark(box);
+    playOk();
+  }
+  slide.querySelectorAll('.click-hint').forEach(h => h.style.opacity='0');
+}
+
+/* ── 생각해봐요 reveal ── */
+function revealThinks(slide){
+  slide.querySelectorAll('.reveal-think').forEach(t => {
+    t.classList.add('revealed');
+    spark(t);
+  });
+  slide.querySelectorAll('.click-hint').forEach(h => h.style.opacity='0');
+  playOk();
+}
+
+/* ── 오디오 ── */
+const AC = new(window.AudioContext || window.webkitAudioContext)();
+function beep(f, d, t='triangle', g=.15){
+  const o = AC.createOscillator(), gn = AC.createGain();
+  o.type = t; o.frequency.value = f;
+  gn.gain.setValueAtTime(g, AC.currentTime);
+  gn.gain.exponentialRampToValueAtTime(.001, AC.currentTime + d);
+  o.connect(gn); gn.connect(AC.destination);
+  o.start(); o.stop(AC.currentTime + d);
+}
+function playOk(){
+  beep(523, .08); 
+  setTimeout(()=>beep(659, .08), 80); 
+  setTimeout(()=>beep(784, .18), 160);
+}
+
+/* ── 파티클 ── */
+function spark(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  ['✦','✧','⭐','◈','❖','★'].forEach(ch => {
+    const p = document.createElement('span');
+    p.className = 'particle';
+    p.textContent = ch;
+    p.style.cssText = `left:${cx + Math.random()*80-40}px;top:${cy + Math.random()*30-15}px;color:${Math.random()>.5?'#F0D080':'#00e5a0'};font-size:${1+Math.random()}rem;`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  });
+}
+</script>
+</body>
+</html>

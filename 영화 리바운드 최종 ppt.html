@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시네마스포츠 · 리바운드 PPT</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100vw;height:100vh;overflow:hidden;font-family:'Noto Sans KR',sans-serif;background:#000;}
+
+.deck{width:100vw;height:100vh;position:relative;}
+.slide{
+  position:absolute;inset:0;
+  width:100vw;height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:4vh 6vw;
+  transform:translateX(100%);
+  transition:transform .5s cubic-bezier(.77,0,.18,1);
+  overflow:hidden;
+}
+.slide.active{transform:translateX(0);}
+.slide.prev{transform:translateX(-100%);}
+
+/* 배경 */
+.bg1{background:linear-gradient(135deg,#0a0a2e 0%,#1a0a4e 40%,#2d0a6e 100%);}
+.bg2{background:linear-gradient(135deg,#071e3d 0%,#0d3b6e 50%,#1a5fa0 100%);}
+.bg3{background:linear-gradient(135deg,#0d1b2a 0%,#0d3b5c 40%,#0d6b8f 100%);}
+.bg4{background:linear-gradient(135deg,#1a0033 0%,#4a0066 50%,#7a00aa 100%);}
+.bg5{background:linear-gradient(135deg,#003322 0%,#005533 40%,#007a4d 100%);}
+.bg6{background:linear-gradient(135deg,#2a0000 0%,#5c0000 40%,#8a0000 100%);}
+.bg7{background:linear-gradient(135deg,#1a1100 0%,#4a3000 40%,#7a5000 100%);}
+.bg8{background:linear-gradient(135deg,#001133 0%,#002266 40%,#003399 100%);}
+.bg9{background:linear-gradient(135deg,#001a1a 0%,#004444 40%,#006666 100%);}
+.bg10{background:linear-gradient(135deg,#220011 0%,#550033 40%,#880055 100%);}
+.bg11{background:linear-gradient(135deg,#002211 0%,#005533 40%,#008855 100%);}
+.bg12{background:linear-gradient(135deg,#110022 0%,#330066 40%,#5500aa 100%);}
+.bg13{background:linear-gradient(135deg,#221100 0%,#553300 40%,#885500 100%);}
+.bg14{background:linear-gradient(135deg,#001122 0%,#002244 40%,#003366 100%);}
+.bg15{background:linear-gradient(135deg,#0a0a2e 0%,#1a0a4e 40%,#2d0a6e 100%);}
+.bg16{background:linear-gradient(135deg,#001a00 0%,#004400 40%,#006600 100%);}
+.bg17{background:linear-gradient(135deg,#220000 0%,#550000 40%,#880000 100%);}
+.bg18{background:linear-gradient(135deg,#001122 0%,#003355 40%,#005588 100%);}
+.bg20{background:linear-gradient(135deg,#0a0a2e 0%,#2d0a6e 40%,#4a00aa 100%);}
+
+/* 데코 */
+.dc{position:absolute;border-radius:50%;opacity:.1;pointer-events:none;}
+.dc1{width:500px;height:500px;background:radial-gradient(circle,#fff,transparent);top:-150px;right:-150px;}
+.dc2{width:320px;height:320px;background:radial-gradient(circle,#fff,transparent);bottom:-80px;left:-80px;}
+.dc3{width:200px;height:200px;background:radial-gradient(circle,#fff,transparent);bottom:80px;right:80px;}
+
+/* 진행바 */
+#pw{position:fixed;top:0;left:0;width:100%;height:5px;background:rgba(255,255,255,.12);z-index:999;}
+#pb{height:5px;background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff);transition:width .4s;}
+
+/* 네비 */
+.nb{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);
+  color:#fff;font-size:clamp(16px,2.2vw,26px);
+  width:clamp(42px,4.5vw,58px);height:clamp(42px,4.5vw,58px);
+  border-radius:50%;cursor:pointer;z-index:999;
+  transition:all .3s;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.nb:hover{background:rgba(255,255,255,.28);transform:translateY(-50%) scale(1.1);}
+#np{left:clamp(8px,1.5vw,18px);}
+#nn{right:clamp(8px,1.5vw,18px);}
+
+/* 슬라이드 번호 & 도트 */
+#snum{position:fixed;bottom:16px;right:20px;color:rgba(255,255,255,.55);font-size:clamp(11px,1.3vw,15px);font-weight:700;z-index:999;}
+#dots{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:999;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;border:1.5px solid rgba(255,255,255,.5);}
+.dot.on{background:#fff;transform:scale(1.35);}
+
+/* 커버 */
+.cvbadge{display:inline-block;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.38);color:rgba(255,255,255,.9);border-radius:28px;padding:5px 18px;font-size:clamp(12px,1.6vw,17px);font-weight:700;letter-spacing:2px;margin-bottom:14px;backdrop-filter:blur(6px);}
+.cvtitle{font-size:clamp(60px,12vw,140px);font-weight:900;background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.05;text-align:center;margin-bottom:8px;}
+.cvsub{font-size:clamp(17px,2.8vw,34px);color:rgba(255,255,255,.78);font-weight:700;text-align:center;margin-bottom:24px;letter-spacing:1px;}
+.cvtags{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:18px;}
+.ctag{background:rgba(255,255,255,.11);border:1.5px solid rgba(255,255,255,.32);color:#fff;border-radius:18px;padding:5px 14px;font-size:clamp(11px,1.4vw,16px);font-weight:700;backdrop-filter:blur(5px);}
+.cvyr{font-size:clamp(13px,1.8vw,20px);color:rgba(255,255,255,.5);font-weight:700;letter-spacing:3px;}
+
+/* 섹션 라벨 & 타이틀 */
+.slabel{font-size:clamp(10px,1.2vw,14px);font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:8px;}
+.stitle{font-size:clamp(28px,5vw,62px);font-weight:900;color:#fff;text-align:center;line-height:1.18;margin-bottom:clamp(10px,2vh,26px);}
+.stitle span{background:linear-gradient(90deg,#ff6b6b,#ffd93d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* 본문 텍스트 */
+.btext{font-size:clamp(15px,2vw,25px);color:rgba(255,255,255,.88);line-height:1.8;text-align:center;max-width:860px;font-weight:400;}
+.btext b{color:#ffd93d;font-weight:900;}
+
+/* 정보 그리드 */
+.igrid{display:flex;flex-wrap:wrap;gap:clamp(8px,1.2vw,16px);justify-content:center;width:100%;max-width:860px;}
+.ic{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:14px;padding:clamp(10px,1.5vh,18px) clamp(13px,1.8vw,22px);min-width:clamp(120px,17vw,190px);flex:1;max-width:220px;text-align:center;backdrop-filter:blur(8px);}
+.ik{font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.52);font-weight:700;margin-bottom:4px;letter-spacing:1px;}
+.iv{font-size:clamp(13px,1.7vw,21px);color:#fff;font-weight:900;}
+
+/* 줄거리 박스 */
+.plotbox{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:18px;padding:clamp(16px,2.5vh,32px) clamp(20px,3vw,40px);max-width:860px;width:100%;backdrop-filter:blur(10px);font-size:clamp(15px,1.95vw,24px);color:rgba(255,255,255,.9);line-height:1.9;font-weight:400;}
+.plotbox b{color:#ffd93d;font-weight:900;}
+.plotbox .hi{background:rgba(255,217,61,.18);color:#ffd93d;border-radius:3px;padding:0 4px;font-weight:900;}
+
+/* 빈칸 퀴즈 */
+.blanklist{width:100%;max-width:820px;display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px);}
+.blankitem{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:14px;padding:clamp(10px,1.5vh,18px) clamp(14px,2vw,24px);backdrop-filter:blur(8px);}
+.bq{font-size:clamp(15px,2vw,24px);color:#fff;font-weight:700;line-height:1.7;display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.bq .qnum{color:rgba(255,255,255,.5);font-size:clamp(13px,1.6vw,20px);margin-right:4px;}
+.slot{display:inline-flex;align-items:center;justify-content:center;min-width:clamp(60px,8vw,100px);height:clamp(28px,3.5vh,40px);background:rgba(255,255,255,.12);border-bottom:2.5px solid #ffd93d;color:rgba(255,255,255,.4);font-size:clamp(12px,1.5vw,18px);font-weight:700;border-radius:4px;padding:0 10px;transition:all .3s;cursor:default;}
+.slot.revealed{background:rgba(255,217,61,.2);color:#ffd93d;border-bottom-color:#ffd93d;}
+.atags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.atag{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:14px;padding:5px 15px;font-size:clamp(12px,1.5vw,18px);font-weight:700;cursor:pointer;transition:all .25s;backdrop-filter:blur(5px);}
+.atag:hover{background:rgba(255,217,61,.2);border-color:#ffd93d;color:#ffd93d;}
+.atag.picked{background:rgba(255,217,61,.25);border-color:#ffd93d;color:#ffd93d;}
+.atag.wrong{background:rgba(255,107,107,.2);border-color:#ff6b6b;color:#ff6b6b;}
+
+/* OX 퀴즈 */
+.oxlist{width:100%;max-width:820px;display:flex;flex-direction:column;gap:clamp(7px,1.1vh,12px);}
+.oxitem{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:14px;padding:clamp(8px,1.3vh,16px) clamp(14px,2vw,24px);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;}
+.oxq{font-size:clamp(13px,1.8vw,22px);color:#fff;font-weight:700;flex:1;line-height:1.5;}
+.oxbtns{display:flex;gap:8px;flex-shrink:0;}
+.oxbtn{width:clamp(38px,4.5vw,54px);height:clamp(38px,4.5vw,54px);border-radius:50%;border:2px solid;font-size:clamp(16px,2.2vw,26px);font-weight:900;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .25s;}
+.oxbtn.o-btn{border-color:#ff6b6b;color:#ff6b6b;}
+.oxbtn.x-btn{border-color:#4d96ff;color:#4d96ff;}
+.oxbtn:hover{transform:scale(1.12);}
+.oxbtn.correct{background:#6bcb7733;border-color:#6bcb77 !important;color:#6bcb77 !important;}
+.oxbtn.wrong2{background:#ff6b6b33;border-color:#ff6b6b !important;color:#ff6b6b !important;}
+.oxexp{font-size:clamp(11px,1.3vw,15px);color:#ffd93d;font-weight:700;display:none;margin-top:5px;}
+.oxexp.show{display:block;}
+
+/* ══════════════════════════════════════
+   등장인물 활동형 슬라이드 전용 스타일
+══════════════════════════════════════ */
+.char-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:clamp(8px,1.2vw,16px);
+  width:100%;max-width:960px;
+}
+.char-card{
+  background:rgba(255,255,255,.1);
+  border:1.5px solid rgba(255,255,255,.22);
+  border-radius:16px;
+  padding:clamp(10px,1.5vh,18px) clamp(10px,1.4vw,18px);
+  backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;gap:6px;
+  transition:transform .3s,box-shadow .3s;
+}
+.char-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.4);}
+.char-top{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
+.char-icon{font-size:clamp(22px,3vw,36px);flex-shrink:0;}
+.char-info{}
+.char-name{font-size:clamp(14px,1.8vw,22px);font-weight:900;color:#fff;line-height:1.2;}
+.char-actor{font-size:clamp(9px,1vw,13px);color:rgba(255,255,255,.45);margin-top:1px;}
+.char-pos-badge{
+  font-size:clamp(9px,1vw,12px);font-weight:700;
+  border-radius:8px;padding:2px 8px;display:inline-block;margin-bottom:4px;
+}
+.pos-pg{background:#4d96ff22;color:#4d96ff;border:1px solid #4d96ff66;}
+.pos-sf{background:#ff6b6b22;color:#ff6b6b;border:1px solid #ff6b6b66;}
+.pos-c {background:#6bcb7722;color:#6bcb77;border:1px solid #6bcb7766;}
+.pos-pf{background:#ffd93d22;color:#ffd93d;border:1px solid #ffd93d66;}
+.pos-sg{background:#c77dff22;color:#c77dff;border:1px solid #c77dff66;}
+.pos-ch{background:#ff9f4322;color:#ff9f43;border:1px solid #ff9f4366;}
+
+.char-q{
+  font-size:clamp(9px,1.1vw,13px);
+  color:rgba(255,255,255,.5);
+  font-weight:700;margin-bottom:2px;
+}
+.char-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.ctag-sel{
+  font-size:clamp(10px,1.1vw,14px);font-weight:700;
+  padding:3px 10px;border-radius:12px;
+  border:1.5px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.75);
+  cursor:pointer;transition:all .22s;
+  user-select:none;
+}
+.ctag-sel:hover{background:rgba(255,217,61,.15);border-color:#ffd93d88;color:#ffd93d;}
+.ctag-sel.on{background:rgba(255,217,61,.22);border-color:#ffd93d;color:#ffd93d;}
+
+/* 인상 깊은 인물 선택 박스 */
+.fav-box{
+  width:100%;max-width:960px;
+  background:rgba(255,255,255,.1);
+  border:1.5px solid rgba(255,255,255,.22);
+  border-radius:16px;
+  padding:clamp(12px,1.8vh,20px) clamp(14px,2vw,22px);
+  backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;gap:10px;
+}
+.fav-title{
+  font-size:clamp(14px,1.8vw,22px);
+  font-weight:900;color:#fff;
+}
+.fav-title span{
+  background:linear-gradient(90deg,#ff6b6b,#ffd93d);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.fav-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.fav-tag{
+  font-size:clamp(12px,1.5vw,18px);font-weight:700;
+  padding:6px 18px;border-radius:20px;
+  border:1.5px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.1);
+  color:#fff;cursor:pointer;
+  transition:all .25s;user-select:none;
+}
+.fav-tag:hover{background:rgba(196,125,255,.2);border-color:#c77dff;color:#c77dff;}
+.fav-tag.on{background:rgba(196,125,255,.28);border-color:#c77dff;color:#c77dff;transform:scale(1.05);}
+
+/* 규칙 카드 */
+.rcard{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:16px;padding:clamp(13px,2vh,24px) clamp(16px,2.5vw,30px);width:100%;max-width:820px;backdrop-filter:blur(10px);margin-bottom:clamp(8px,1.3vh,16px);}
+.rnum{font-size:clamp(20px,3vw,38px);font-weight:900;background:linear-gradient(90deg,#4d96ff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.rtitle{font-size:clamp(16px,2.2vw,28px);font-weight:900;color:#fff;margin-bottom:6px;}
+.rdesc{font-size:clamp(13px,1.6vw,20px);color:rgba(255,255,255,.8);line-height:1.65;}
+.rdesc b{color:#ffd93d;}
+.rq-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.rq-q{font-size:clamp(13px,1.6vw,19px);color:rgba(255,255,255,.75);font-weight:700;}
+.rq-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.rtag{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);color:#fff;border-radius:12px;padding:5px 14px;font-size:clamp(12px,1.4vw,17px);font-weight:700;cursor:pointer;transition:all .25s;}
+.rtag:hover{background:rgba(255,217,61,.18);border-color:#ffd93d;color:#ffd93d;}
+.rtag.rans{background:rgba(107,203,119,.22);border-color:#6bcb77;color:#6bcb77;}
+.rtag.rwrong{background:rgba(255,107,107,.2);border-color:#ff6b6b;color:#ff6b6b;}
+
+/* 명대사 */
+.qcard{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-left:5px solid #ffd93d;border-radius:18px;padding:clamp(18px,2.8vh,34px) clamp(22px,3.5vw,42px);max-width:800px;width:100%;backdrop-filter:blur(12px);text-align:center;margin-bottom:clamp(8px,1.2vh,16px);}
+.qmark{font-size:clamp(36px,5.5vw,68px);color:rgba(255,255,255,.18);line-height:1;margin-bottom:2px;}
+.qtext{font-size:clamp(18px,2.8vw,36px);font-weight:900;color:#fff;line-height:1.5;margin-bottom:12px;}
+.qwho{font-size:clamp(12px,1.5vw,18px);color:rgba(255,255,255,.55);font-weight:700;margin-bottom:12px;}
+.qmeaning{font-size:clamp(13px,1.6vw,20px);color:rgba(255,255,255,.78);line-height:1.7;border-top:1px solid rgba(255,255,255,.18);padding-top:12px;}
+.qmeaning b{color:#6bcb77;font-weight:900;}
+.qquiz-q{font-size:clamp(13px,1.6vw,18px);color:rgba(255,255,255,.65);font-weight:700;margin:10px 0 8px;}
+.qquiz-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.qtag{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);color:#fff;border-radius:14px;padding:6px 16px;font-size:clamp(12px,1.4vw,17px);font-weight:700;cursor:pointer;transition:all .25s;}
+.qtag:hover{background:rgba(255,217,61,.18);border-color:#ffd93d;color:#ffd93d;}
+.qtag.qans{background:rgba(107,203,119,.22);border-color:#6bcb77;color:#6bcb77;}
+.qtag.qwrong{background:rgba(255,107,107,.18);border-color:#ff6b6b;color:#ff6b6b;}
+
+/* 생각해봐요 */
+.thbox{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:16px;padding:clamp(14px,2vh,26px) clamp(18px,2.8vw,34px);max-width:820px;width:100%;backdrop-filter:blur(10px);margin-bottom:clamp(8px,1.2vh,14px);}
+.thq{font-size:clamp(15px,2vw,26px);color:#fff;font-weight:900;margin-bottom:10px;line-height:1.5;}
+.thtags{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.thtag{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);color:#fff;border-radius:14px;padding:6px 16px;font-size:clamp(12px,1.4vw,18px);font-weight:700;cursor:pointer;transition:all .25s;}
+.thtag:hover{background:rgba(196,125,255,.2);border-color:#c77dff;color:#c77dff;}
+.thtag.tson{background:rgba(196,125,255,.25);border-color:#c77dff;color:#c77dff;}
+
+/* 자기평가 */
+.evrow{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:14px;padding:clamp(12px,1.8vh,22px) clamp(16px,2.5vw,28px);max-width:820px;width:100%;backdrop-filter:blur(8px);margin-bottom:clamp(8px,1.2vh,14px);}
+.evtxt{font-size:clamp(14px,1.8vw,22px);color:#fff;font-weight:700;flex:1;line-height:1.45;}
+.sbrow{display:flex;gap:8px;}
+.sbtn{width:clamp(30px,3.8vw,44px);height:clamp(30px,3.8vw,44px);border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.8vw,22px);transition:all .25s;color:rgba(255,255,255,.3);}
+.sbtn:hover{background:rgba(255,217,61,.2);border-color:#ffd93d;color:#ffd93d;}
+.sbtn.lit{background:rgba(255,217,61,.25);border-color:#ffd93d;color:#ffd93d;}
+
+/* 감상문 가이드 */
+.gstep{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,.09);border:1.5px solid rgba(255,255,255,.2);border-radius:15px;padding:clamp(11px,1.7vh,20px) clamp(14px,2.2vw,28px);max-width:820px;width:100%;margin-bottom:clamp(8px,1.2vh,14px);}
+.gnum{min-width:clamp(34px,4vw,50px);height:clamp(34px,4vw,50px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.8vw,22px);font-weight:900;flex-shrink:0;}
+.gn1{background:#ff6b6b22;color:#ff6b6b;border:2px solid #ff6b6b;}
+.gn2{background:#ffd93d22;color:#ffd93d;border:2px solid #ffd93d;}
+.gn3{background:#6bcb7722;color:#6bcb77;border:2px solid #6bcb77;}
+.gn4{background:#4d96ff22;color:#4d96ff;border:2px solid #4d96ff;}
+.gstep-t{font-size:clamp(14px,1.8vw,22px);font-weight:900;color:#fff;margin-bottom:3px;}
+.gstep-d{font-size:clamp(12px,1.4vw,17px);color:rgba(255,255,255,.7);line-height:1.6;}
+
+/* 마무리 */
+.endicon{font-size:clamp(50px,9vw,100px);margin-bottom:14px;}
+.endtitle{font-size:clamp(34px,6vw,72px);font-weight:900;background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:12px;}
+.endsub{font-size:clamp(15px,2vw,26px);color:rgba(255,255,255,.78);text-align:center;font-weight:700;line-height:1.7;max-width:680px;}
+</style>
+</head>
+<body>
+
+<div id="pw"><div id="pb"></div></div>
+<button class="nb" id="np" onclick="go(-1)">&#8592;</button>
+<button class="nb" id="nn" onclick="go(1)">&#8594;</button>
+<div id="snum"></div>
+<div id="dots"></div>
+
+<div class="deck">
+
+<!-- ══ 1. 커버 ══ -->
+<section class="slide bg1 active">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="cvbadge">🎬 시네마스포츠 활동지</div>
+  <div class="cvtitle">리바운드</div>
+  <div class="cvsub">REBOUND · 2023 · 실화 기반 농구 영화</div>
+  <div class="cvtags">
+    <span class="ctag">🎬 감독 장항준</span>
+    <span class="ctag">🏀 스포츠 드라마</span>
+    <span class="ctag">⏱ 122분</span>
+    <span class="ctag">📅 2023.04.05</span>
+    <span class="ctag">👨‍👧 12세 관람가</span>
+  </div>
+  <div class="cvyr">부산중앙고 농구부 · 8일간의 기적</div>
+</section>
+
+<!-- ══ 2. 영화 기본 정보 ══ -->
+<section class="slide bg2">
+  <div class="dc dc1"></div>
+  <div class="slabel">MOVIE INFO · 영화 기본 정보</div>
+  <div class="stitle">📋 <span>영화 기본 정보</span></div>
+  <div class="igrid">
+    <div class="ic"><div class="ik">🎬 감독</div><div class="iv">장항준</div></div>
+    <div class="ic"><div class="ik">📅 개봉일</div><div class="iv">2023.04.05</div></div>
+    <div class="ic"><div class="ik">⏱ 러닝타임</div><div class="iv">122분</div></div>
+    <div class="ic"><div class="ik">🎭 장르</div><div class="iv">스포츠 드라마</div></div>
+    <div class="ic"><div class="ik">👤 주연</div><div class="iv">안재홍</div></div>
+    <div class="ic"><div class="ik">🏫 배경</div><div class="iv">부산중앙고</div></div>
+    <div class="ic"><div class="ik">📖 원작</div><div class="iv">2012년 실화</div></div>
+    <div class="ic"><div class="ik">📜 각본</div><div class="iv">권성휘 · 김은희</div></div>
+  </div>
+</section>
+
+<!-- ══ 3. 줄거리 ══ -->
+<section class="slide bg3">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">STORY · 줄거리</div>
+  <div class="stitle">🎯 <span>줄거리</span></div>
+  <div class="plotbox">
+    과거 부산중앙고 농구부의 <span class="hi">에이스</span>였던 <b>강양현</b>은 전국대회
+    <span class="hi">MVP</span>까지 받은 선수였지만 프로에서 빛을 발하지 못하고 은퇴했습니다.<br><br>
+    이후 모교에서 <span class="hi">공익근무요원</span>으로 복무하던 중,
+    <span class="hi">해체 위기</span>에 놓인 농구부의 <span class="hi">신임 코치</span>로 발탁됩니다.<br><br>
+    첫 전국대회 상대는 고교 최강 <span class="hi">용산고</span>. 팀워크가 무너진 중앙고는
+    <span class="hi">몰수패</span>라는 치욕을 당하지만, 코치와 단 <span class="hi">6명</span>의 선수는
+    포기하지 않고 <span class="hi">8일간</span>의 기적을 써 내려갑니다.
+  </div>
+</section>
+
+<!-- ══ 4. 빈칸 채우기 ══ -->
+<section class="slide bg4">
+  <div class="dc dc1"></div>
+  <div class="slabel">QUIZ 1 · 빈칸 채우기</div>
+  <div class="stitle">✏️ <span>빈칸 채우기</span></div>
+  <div class="blanklist">
+    <div class="blankitem">
+      <div class="bq"><span class="qnum">①</span>강양현은 전국대회에서&nbsp;<span class="slot" id="bx1">？</span>&nbsp;까지 받은 뛰어난 농구선수였다.</div>
+      <div class="atags">
+        <span class="atag" onclick="pickBlank('bx1',this,'MVP',true,'g1')">MVP</span>
+        <span class="atag" onclick="pickBlank('bx1',this,'꼴찌상',false,'g1')">꼴찌상</span>
+        <span class="atag" onclick="pickBlank('bx1',this,'감독상',false,'g1')">감독상</span>
+      </div>
+    </div>
+    <div class="blankitem">
+      <div class="bq"><span class="qnum">②</span>양현은 프로 은퇴 후&nbsp;<span class="slot" id="bx2">？</span>&nbsp;으로 복무하다 코치가 된다.</div>
+      <div class="atags">
+        <span class="atag" onclick="pickBlank('bx2',this,'공익근무요원',true,'g2')">공익근무요원</span>
+        <span class="atag" onclick="pickBlank('bx2',this,'체육 선생님',false,'g2')">체육 선생님</span>
+        <span class="atag" onclick="pickBlank('bx2',this,'교장 선생님',false,'g2')">교장 선생님</span>
+      </div>
+    </div>
+    <div class="blankitem">
+      <div class="bq"><span class="qnum">③</span>첫 경기 상대는&nbsp;<span class="slot" id="bx3">？</span>&nbsp;고이고, 중앙고는&nbsp;<span class="slot" id="bx4">？</span>&nbsp;를 당했다.</div>
+      <div class="atags">
+        <span class="atag" onclick="pickBlank('bx3',this,'용산',true,'g3')">용산</span>
+        <span class="atag" onclick="pickBlank('bx3',this,'서울',false,'g3')">서울</span>
+        <span class="atag" onclick="pickBlank('bx3',this,'부산',false,'g3')">부산</span>
+        <span class="atag" onclick="pickBlank('bx4',this,'몰수패',true,'g4')">몰수패</span>
+        <span class="atag" onclick="pickBlank('bx4',this,'우승',false,'g4')">우승</span>
+        <span class="atag" onclick="pickBlank('bx4',this,'무승부',false,'g4')">무승부</span>
+      </div>
+    </div>
+    <div class="blankitem">
+      <div class="bq"><span class="qnum">④</span>코치와 단&nbsp;<span class="slot" id="bx5">？</span>&nbsp;명의 선수가&nbsp;<span class="slot" id="bx6">？</span>&nbsp;일간의 기적을 써 내려갔다.</div>
+      <div class="atags">
+        <span class="atag" onclick="pickBlank('bx5',this,'6',true,'g5')">6</span>
+        <span class="atag" onclick="pickBlank('bx5',this,'10',false,'g5')">10</span>
+        <span class="atag" onclick="pickBlank('bx5',this,'3',false,'g5')">3</span>
+        <span class="atag" onclick="pickBlank('bx6',this,'8',true,'g6')">8</span>
+        <span class="atag" onclick="pickBlank('bx6',this,'30',false,'g6')">30</span>
+        <span class="atag" onclick="pickBlank('bx6',this,'100',false,'g6')">100</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. OX 퀴즈 ══ -->
+<section class="slide bg5">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">QUIZ 2 · OX 퀴즈</div>
+  <div class="stitle">⭕❌ <span>OX 퀴즈</span></div>
+  <div class="oxlist">
+    <div class="oxitem">
+      <div style="flex:1">
+        <div class="oxq">① 강양현은 고등학교 시절 전국대회 MVP를 받은 적이 있다.</div>
+        <div class="oxexp" id="ox1e">✅ O 정답! 강양현은 고교 시절 전국대회 MVP를 받은 에이스였습니다.</div>
+      </div>
+      <div class="oxbtns">
+        <button class="oxbtn o-btn" onclick="doOX(this,1,'O','O')">O</button>
+        <button class="oxbtn x-btn" onclick="doOX(this,1,'X','O')">X</button>
+      </div>
+    </div>
+    <div class="oxitem">
+      <div style="flex:1">
+        <div class="oxq">② 중앙고는 첫 경기에서 이겨 바로 결승에 진출했다.</div>
+        <div class="oxexp" id="ox2e">✅ X 정답! 첫 경기에서 에이스 이탈로 <b>몰수패</b>를 당했습니다.</div>
+      </div>
+      <div class="oxbtns">
+        <button class="oxbtn o-btn" onclick="doOX(this,2,'O','X')">O</button>
+        <button class="oxbtn x-btn" onclick="doOX(this,2,'X','X')">X</button>
+      </div>
+    </div>
+    <div class="oxitem">
+      <div style="flex:1">
+        <div class="oxq">③ 이 영화는 2012년에 실제로 일어난 이야기를 바탕으로 만들어졌다.</div>
+        <div class="oxexp" id="ox3e">✅ O 정답! 2012년 부산중앙고 농구부의 실화를 바탕으로 합니다.</div>
+      </div>
+      <div class="oxbtns">
+        <button class="oxbtn o-btn" onclick="doOX(this,3,'O','O')">O</button>
+        <button class="oxbtn x-btn" onclick="doOX(this,3,'X','O')">X</button>
+      </div>
+    </div>
+    <div class="oxitem">
+      <div style="flex:1">
+        <div class="oxq">④ 홍순규는 원래 축구를 하다가 코치 눈에 띄어 농구부에 들어오게 되었다.</div>
+        <div class="oxexp" id="ox4e">✅ O 정답! 홍순규는 축구선수 출신으로 뛰어난 점프력과 큰 키 덕분에 스카우트됩니다.</div>
+      </div>
+      <div class="oxbtns">
+        <button class="oxbtn o-btn" onclick="doOX(this,4,'O','O')">O</button>
+        <button class="oxbtn x-btn" onclick="doOX(this,4,'X','O')">X</button>
+      </div>
+    </div>
+    <div class="oxitem">
+      <div style="flex:1">
+        <div class="oxq">⑤ 몰수패 공식 기록 점수는 20:0이다.</div>
+        <div class="oxexp" id="ox5e">✅ O 정답! 농구 몰수패는 공식적으로 20:0으로 기록됩니다.</div>
+      </div>
+      <div class="oxbtns">
+        <button class="oxbtn o-btn" onclick="doOX(this,5,'O','O')">O</button>
+        <button class="oxbtn x-btn" onclick="doOX(this,5,'X','O')">X</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6. 등장인물 알아보기 ① (활동형) ══ -->
+<section class="slide bg6">
+  <div class="dc dc1"></div>
+  <div class="slabel">CHARACTERS · 등장인물 알아보기</div>
+  <div class="stitle" style="margin-bottom:clamp(8px,1.5vh,18px);">👥 <span>등장인물 알아보기</span> ①</div>
+  <div style="font-size:clamp(11px,1.3vw,15px);color:rgba(255,255,255,.55);margin-bottom:clamp(8px,1.2vh,14px);font-weight:700;">
+    💡 알맞은 특징 태그를 클릭해서 선택하세요! (중복 선택 가능)
+  </div>
+  <div class="char-grid">
+    <!-- 강양현 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">🏋️</div>
+        <div class="char-info">
+          <div class="char-name">강양현</div>
+          <div class="char-actor">배우: 안재홍</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-ch">코치</span>
+      <div class="char-q">이 인물의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">전 농구 에이스</span>
+        <span class="ctag-sel" onclick="togChar(this)">공익근무요원</span>
+        <span class="ctag-sel" onclick="togChar(this)">포기를 모름</span>
+      </div>
+    </div>
+    <!-- 천기범 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">🎯</div>
+        <div class="char-info">
+          <div class="char-name">천기범</div>
+          <div class="char-actor">배우: 이신영</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-pg">포인트 가드 (PG)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">천재였지만 슬럼프</span>
+        <span class="ctag-sel" onclick="togChar(this)">키가 늦게 자람</span>
+        <span class="ctag-sel" onclick="togChar(this)">팀의 에이스</span>
+      </div>
+    </div>
+    <!-- 배규혁 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">💪</div>
+        <div class="char-info">
+          <div class="char-name">배규혁</div>
+          <div class="char-actor">배우: 정진운</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-sf">스몰 포워드 (SF)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">발목 부상</span>
+        <span class="ctag-sel" onclick="togChar(this)">길거리 내기 농구</span>
+        <span class="ctag-sel" onclick="togChar(this)">꿈을 접었던 선수</span>
+      </div>
+    </div>
+    <!-- 홍순규 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">🦘</div>
+        <div class="char-info">
+          <div class="char-name">홍순규</div>
+          <div class="char-actor">배우: 김택</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-c">센터 (C)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">축구선수 출신</span>
+        <span class="ctag-sel" onclick="togChar(this)">압도적인 키</span>
+        <span class="ctag-sel" onclick="togChar(this)">괴력 보유</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. 등장인물 알아보기 ② (활동형) ══ -->
+<section class="slide bg7">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">CHARACTERS · 등장인물 알아보기</div>
+  <div class="stitle" style="margin-bottom:clamp(8px,1.5vh,18px);">👥 <span>등장인물 알아보기</span> ②</div>
+  <div style="font-size:clamp(11px,1.3vw,15px);color:rgba(255,255,255,.55);margin-bottom:clamp(8px,1.2vh,14px);font-weight:700;">
+    💡 알맞은 특징 태그를 클릭해서 선택하세요! (중복 선택 가능)
+  </div>
+  <div class="char-grid" style="grid-template-columns:repeat(3,1fr);max-width:760px;">
+    <!-- 정강호 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">🔥</div>
+        <div class="char-info">
+          <div class="char-name">정강호</div>
+          <div class="char-actor">배우: 정건주</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-pf">파워 포워드 (PF)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">길거리 농구 출신</span>
+        <span class="ctag-sel" onclick="togChar(this)">정식 훈련 없음</span>
+        <span class="ctag-sel" onclick="togChar(this)">강한 체력</span>
+      </div>
+    </div>
+    <!-- 허재윤 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">🌟</div>
+        <div class="char-info">
+          <div class="char-name">허재윤</div>
+          <div class="char-actor">배우: 김민</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-sg">식스맨 (SG)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">7년 경력 벤치</span>
+        <span class="ctag-sel" onclick="togChar(this)">기초 부족</span>
+        <span class="ctag-sel" onclick="togChar(this)">누구보다 성실</span>
+      </div>
+    </div>
+    <!-- 정진욱 -->
+    <div class="char-card">
+      <div class="char-top">
+        <div class="char-icon">⚡</div>
+        <div class="char-info">
+          <div class="char-name">정진욱</div>
+          <div class="char-actor">배우: 안지호</div>
+        </div>
+      </div>
+      <span class="char-pos-badge pos-sg">슈팅 가드 (SG)</span>
+      <div class="char-q">이 선수의 특징은?</div>
+      <div class="char-tags">
+        <span class="ctag-sel" onclick="togChar(this)">열정만큼은 최고</span>
+        <span class="ctag-sel" onclick="togChar(this)">자칭 마이클 조던</span>
+        <span class="ctag-sel" onclick="togChar(this)">분위기 메이커</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 인상 깊은 인물 선택 -->
+  <div class="fav-box" style="margin-top:clamp(10px,1.8vh,20px);">
+    <div class="fav-title">💬 내가 가장 <span>인상 깊었던 인물</span>은? &nbsp;<span style="font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.45);font-weight:700;background:none;-webkit-text-fill-color:rgba(255,255,255,.45);">한 명만 선택하세요</span></div>
+    <div class="fav-tags">
+      <span class="fav-tag" onclick="pickFav(this)">강양현</span>
+      <span class="fav-tag" onclick="pickFav(this)">천기범</span>
+      <span class="fav-tag" onclick="pickFav(this)">배규혁</span>
+      <span class="fav-tag" onclick="pickFav(this)">홍순규</span>
+      <span class="fav-tag" onclick="pickFav(this)">정강호</span>
+      <span class="fav-tag" onclick="pickFav(this)">허재윤</span>
+      <span class="fav-tag" onclick="pickFav(this)">정진욱</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8. 농구 규칙 퀴즈 ══ -->
+<section class="slide bg8">
+  <div class="dc dc1"></div>
+  <div class="slabel">BASKETBALL RULES · 농구 규칙 퀴즈</div>
+  <div class="stitle">🏀 <span>농구 규칙</span> 퀴즈</div>
+  <div style="width:100%;max-width:820px;">
+    <div class="rcard">
+      <div class="rnum">01</div>
+      <div class="rtitle">몰수패 (Forfeit)</div>
+      <div class="rdesc">선수들이 출전 불가능할 때 적용돼요. 중앙고가 첫 경기에서 이 상황을 당했어요!</div>
+      <div class="rq-row">
+        <div class="rq-q">🤔 몰수패가 되면 점수는?</div>
+        <div class="rq-tags">
+          <span class="rtag" onclick="pickRule(this,'20 : 0',true,'rg1')">20 : 0</span>
+          <span class="rtag" onclick="pickRule(this,'0 : 0',false,'rg1')">0 : 0</span>
+          <span class="rtag" onclick="pickRule(this,'10 : 0',false,'rg1')">10 : 0</span>
+        </div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rnum">02</div>
+      <div class="rtitle">테크니컬 파울 (T-Foul)</div>
+      <div class="rdesc">코치나 선수가 심판에게 거칠게 항의하거나 비신사적인 행동을 하면 선언돼요!</div>
+      <div class="rq-row">
+        <div class="rq-q">🤔 T파울 몇 개면 코치가 퇴장?</div>
+        <div class="rq-tags">
+          <span class="rtag" onclick="pickRule(this,'1개',false,'rg2')">1개</span>
+          <span class="rtag" onclick="pickRule(this,'2개',true,'rg2')">2개</span>
+          <span class="rtag" onclick="pickRule(this,'5개',false,'rg2')">5개</span>
+        </div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rnum">03</div>
+      <div class="rtitle">개인 파울 퇴장 (5 Fouls Out)</div>
+      <div class="rdesc">한 선수가 파울을 너무 많이 범하면 퇴장됩니다. 팀이 불리해져요!</div>
+      <div class="rq-row">
+        <div class="rq-q">🤔 파울 몇 개면 선수 퇴장?</div>
+        <div class="rq-tags">
+          <span class="rtag" onclick="pickRule(this,'3개',false,'rg3')">3개</span>
+          <span class="rtag" onclick="pickRule(this,'5개',true,'rg3')">5개</span>
+          <span class="rtag" onclick="pickRule(this,'10개',false,'rg3')">10개</span>
+        </div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rnum">04</div>
+      <div class="rtitle">3점 슛 &amp; 리바운드</div>
+      <div class="rdesc">3점 라인 <b>바깥</b>에서 넣으면 3점, 안쪽은 2점. 슛이 빗나갔을 때 공을 잡는 것이 '리바운드'!</div>
+      <div class="rq-row">
+        <div class="rq-q">🤔 리바운드는 어떤 순간?</div>
+        <div class="rq-tags">
+          <span class="rtag" onclick="pickRule(this,'슛이 빗나갔을 때',true,'rg4')">슛이 빗나갔을 때</span>
+          <span class="rtag" onclick="pickRule(this,'공격 시작할 때',false,'rg4')">공격 시작할 때</span>
+          <span class="rtag" onclick="pickRule(this,'휴식 시간에',false,'rg4')">휴식 시간에</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9. 명대사 ① ══ -->
+<section class="slide bg9">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">FAMOUS LINE 01 · 명대사</div>
+  <div class="stitle">💬 <span>명대사</span> ①</div>
+  <div class="qcard">
+    <div class="qmark">"</div>
+    <div class="qtext">"농구하다 보면 슛 쏴도 안 들어갈 때가 있다.<br>아니, 안 들어갈 때가 훨씬 많지.<br>근데 그 순간, 노력에 따라 다시 기회가 생긴다.<br>그걸 뭐라고 하노?" — "리바운드."</div>
+    <div class="qwho">— 강양현 코치 &amp; 홍순규</div>
+    <div class="qquiz-q">❓ 이 대사에서 '리바운드'가 뜻하는 것은? (클릭해서 선택)</div>
+    <div class="qquiz-tags">
+      <span class="qtag" onclick="pickQ(this,true,'qg1')">실패해도 다시 도전하는 것</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg1')">이기기 위해 달려드는 것</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg1')">농구 기술 중 하나일 뿐</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10. 명대사 ② ══ -->
+<section class="slide bg10">
+  <div class="dc dc1"></div>
+  <div class="slabel">FAMOUS LINE 02 · 명대사</div>
+  <div class="stitle">💬 <span>명대사</span> ②</div>
+  <div class="qcard">
+    <div class="qmark">"</div>
+    <div class="qtext">"네가 좋아하는 걸<br>절대 포기하지 말라고."</div>
+    <div class="qwho">— 강양현 코치</div>
+    <div class="qmeaning">
+      좋아하는 일이라면 힘들고 실패해도 <b>끝까지 포기하지 말라</b>는 메시지.<br>
+      선수들에게, 그리고 영화를 보는 우리 모두에게 전하는 진심 어린 말.
+    </div>
+    <div class="qquiz-q">❓ 이 말이 나에게 주는 메시지는?</div>
+    <div class="qquiz-tags">
+      <span class="qtag" onclick="pickQ(this,true,'qg2')">좋아하는 일을 끝까지 해야 한다</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg2')">농구만 열심히 하면 된다</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg2')">어른 말을 잘 들어야 한다</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11. 명대사 ③ ══ -->
+<section class="slide bg11">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">FAMOUS LINE 03 · 명대사</div>
+  <div class="stitle">💬 <span>명대사</span> ③</div>
+  <div class="qcard">
+    <div class="qmark">"</div>
+    <div class="qtext">"남은 경기, 그리고 남은 인생.<br>겁먹지 말고 달려들어서 다시 잡아내라."</div>
+    <div class="qwho">— 강양현 코치</div>
+    <div class="qmeaning">
+      경기장 안뿐만 아니라 <b>인생 전체를 두고</b> 하는 말.<br>
+      두려워도 용기 내어 도전하고, 기회를 다시 잡아내라는 강한 격려.
+    </div>
+    <div class="qquiz-q">❓ 코치가 선수들에게 전하고 싶은 마음은?</div>
+    <div class="qquiz-tags">
+      <span class="qtag" onclick="pickQ(this,true,'qg3')">두려워도 용기 내어 도전하라</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg3')">농구를 꼭 직업으로 삼아라</span>
+      <span class="qtag" onclick="pickQ(this,false,'qg3')">경기에서 이기는 것이 전부다</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12. 생각해봐요 ① ══ -->
+<section class="slide bg12">
+  <div class="dc dc1"></div>
+  <div class="slabel">THINK 01 · 생각해봐요</div>
+  <div class="stitle">🤔 <span>생각해봐요</span> ①</div>
+  <div class="thbox">
+    <div class="thq">Q1. 중앙고 선수들이 힘든 상황에서도 포기하지 않을 수 있었던 이유는?</div>
+    <div class="thtags">
+      <span class="thtag" onclick="togTh(this)">서로를 믿는 팀워크</span>
+      <span class="thtag" onclick="togTh(this)">코치의 응원과 믿음</span>
+      <span class="thtag" onclick="togTh(this)">농구에 대한 순수한 열정</span>
+      <span class="thtag" onclick="togTh(this)">모두 위의 것들</span>
+    </div>
+  </div>
+  <div class="thbox">
+    <div class="thq">Q2. 내가 강양현 코치라면, 첫 경기 몰수패 후 선수들에게 어떤 말을 해줬을까요? <span style="font-size:clamp(11px,1.3vw,15px);color:rgba(255,255,255,.5);font-weight:400;">(해당하는 것을 모두 선택)</span></div>
+    <div class="thtags">
+      <span class="thtag" onclick="togTh(this)">포기하지 마</span>
+      <span class="thtag" onclick="togTh(this)">함께 하면 돼</span>
+      <span class="thtag" onclick="togTh(this)">실수해도 괜찮아</span>
+      <span class="thtag" onclick="togTh(this)">즐기자</span>
+      <span class="thtag" onclick="togTh(this)">다시 일어나</span>
+      <span class="thtag" onclick="togTh(this)">믿어</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13. 생각해봐요 ② ══ -->
+<section class="slide bg13">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">THINK 02 · 생각해봐요</div>
+  <div class="stitle">🤔 <span>생각해봐요</span> ②</div>
+  <div class="thbox">
+    <div class="thq">Q3. 나의 생활에서 '리바운드'가 필요한 순간은 언제일까요? <span style="font-size:clamp(11px,1.3vw,15px);color:rgba(255,255,255,.5);font-weight:400;">(해당하는 것을 모두 선택)</span></div>
+    <div class="thtags">
+      <span class="thtag" onclick="togTh(this)">시험에서 실패했을 때</span>
+      <span class="thtag" onclick="togTh(this)">친구와 다퉜을 때</span>
+      <span class="thtag" onclick="togTh(this)">하고 싶은 게 안 될 때</span>
+      <span class="thtag" onclick="togTh(this)">자신감을 잃었을 때</span>
+    </div>
+  </div>
+  <div class="thbox">
+    <div class="thq">Q4. 이 영화에서 가장 인상 깊었던 장면이나 메시지는? <span style="font-size:clamp(11px,1.3vw,15px);color:rgba(255,255,255,.5);font-weight:400;">(한 개 선택)</span></div>
+    <div class="thtags">
+      <span class="thtag" onclick="singleTh(this)">몰수패 후 포기하지 않는 장면</span>
+      <span class="thtag" onclick="singleTh(this)">선수들이 하나가 되는 장면</span>
+      <span class="thtag" onclick="singleTh(this)">코치의 진심 어린 응원</span>
+      <span class="thtag" onclick="singleTh(this)">마지막 경기 장면</span>
+      <span class="thtag" onclick="singleTh(this)">리바운드라는 말의 의미</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14. 나만의 리바운드 ══ -->
+<section class="slide bg14">
+  <div class="dc dc1"></div>
+  <div class="slabel">MY REBOUND · 나만의 리바운드</div>
+  <div class="stitle">🌟 <span>나만의 리바운드</span></div>
+  <div class="thbox" style="max-width:820px;">
+    <div class="thq" style="font-size:clamp(17px,2.4vw,30px);margin-bottom:14px;">
+      🏀 실패하거나 힘들었지만 <span style="color:#ffd93d;">다시 도전</span>했던 나의 경험은?
+    </div>
+    <div style="font-size:clamp(13px,1.6vw,19px);color:rgba(255,255,255,.65);margin-bottom:12px;">📌 주제 선택 (해당하는 것 모두 클릭)</div>
+    <div class="thtags" style="margin-bottom:14px;">
+      <span class="thtag" onclick="togTh(this)">📚 공부</span>
+      <span class="thtag" onclick="togTh(this)">🏃 운동/체육</span>
+      <span class="thtag" onclick="togTh(this)">👫 친구 관계</span>
+      <span class="thtag" onclick="togTh(this)">🎨 취미/특기</span>
+      <span class="thtag" onclick="togTh(this)">📝 발표/시험</span>
+      <span class="thtag" onclick="togTh(this)">👨‍👩‍👧 가족</span>
+    </div>
+    <div style="font-size:clamp(14px,1.7vw,20px);color:rgba(255,255,255,.5);text-align:center;margin-top:8px;">
+      ✍️ 활동지에 자신의 이야기를 자유롭게 써보세요!
+    </div>
+  </div>
+</section>
+
+<!-- ══ 15. 감상문 가이드 ══ -->
+<section class="slide bg15">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">ESSAY GUIDE · 감상문 작성법</div>
+  <div class="stitle">📝 <span>감상문 쓰는 법</span></div>
+  <div class="gstep">
+    <div class="gnum gn1">1</div>
+    <div>
+      <div class="gstep-t">🎬 영화 소개</div>
+      <div class="gstep-d">제목, 감독, 장르, 기본 정보를 한두 문장으로 소개하세요.</div>
+    </div>
+  </div>
+  <div class="gstep">
+    <div class="gnum gn2">2</div>
+    <div>
+      <div class="gstep-t">📖 인상 깊은 장면</div>
+      <div class="gstep-d">기억에 남는 장면이나 대사를 쓰고, 왜 인상 깊었는지 설명하세요.</div>
+    </div>
+  </div>
+  <div class="gstep">
+    <div class="gnum gn3">3</div>
+    <div>
+      <div class="gstep-t">💬 기억나는 대사</div>
+      <div class="gstep-d">인상 깊었던 대사를 인용하고, 그 의미를 자신의 말로 풀어쓰세요.</div>
+    </div>
+  </div>
+  <div class="gstep">
+    <div class="gnum gn4">4</div>
+    <div>
+      <div class="gstep-t">🪞 나에게 주는 메시지</div>
+      <div class="gstep-d">영화 내용과 나의 경험을 연결해 내가 얻은 깨달음이나 다짐을 쓰세요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 16. 자기평가 ══ -->
+<section class="slide bg16">
+  <div class="dc dc1"></div>
+  <div class="slabel">SELF EVALUATION · 자기평가</div>
+  <div class="stitle">⭐ <span>스스로 평가해봐요</span></div>
+  <div class="evrow">
+    <div class="evtxt">① 영화의 줄거리와 등장인물을 잘 이해했다.</div>
+    <div class="sbrow" id="ev1">
+      <div class="sbtn" onclick="doStar('ev1',1)">☆</div>
+      <div class="sbtn" onclick="doStar('ev1',2)">☆</div>
+      <div class="sbtn" onclick="doStar('ev1',3)">☆</div>
+      <div class="sbtn" onclick="doStar('ev1',4)">☆</div>
+      <div class="sbtn" onclick="doStar('ev1',5)">☆</div>
+    </div>
+  </div>
+  <div class="evrow">
+    <div class="evtxt">② 농구 규칙을 영화와 연결해서 설명할 수 있다.</div>
+    <div class="sbrow" id="ev2">
+      <div class="sbtn" onclick="doStar('ev2',1)">☆</div>
+      <div class="sbtn" onclick="doStar('ev2',2)">☆</div>
+      <div class="sbtn" onclick="doStar('ev2',3)">☆</div>
+      <div class="sbtn" onclick="doStar('ev2',4)">☆</div>
+      <div class="sbtn" onclick="doStar('ev2',5)">☆</div>
+    </div>
+  </div>
+  <div class="evrow">
+    <div class="evtxt">③ 영화의 메시지를 나의 생활과 연결해 생각해보았다.</div>
+    <div class="sbrow" id="ev3">
+      <div class="sbtn" onclick="doStar('ev3',1)">☆</div>
+      <div class="sbtn" onclick="doStar('ev3',2)">☆</div>
+      <div class="sbtn" onclick="doStar('ev3',3)">☆</div>
+      <div class="sbtn" onclick="doStar('ev3',4)">☆</div>
+      <div class="sbtn" onclick="doStar('ev3',5)">☆</div>
+    </div>
+  </div>
+  <div style="margin-top:clamp(14px,2.5vh,28px);font-size:clamp(13px,1.7vw,20px);color:rgba(255,255,255,.55);text-align:center;font-weight:700;">
+    ✍️ 감상문은 활동지에 직접 작성하세요!
+  </div>
+</section>
+
+<!-- ══ 17. 실화 뒷이야기 ══ -->
+<section class="slide bg17">
+  <div class="dc dc1"></div><div class="dc dc2"></div>
+  <div class="slabel">REAL STORY · 실화 뒷이야기</div>
+  <div class="stitle">🏅 <span>실화 뒷이야기</span></div>
+  <div class="char-grid" style="grid-template-columns:repeat(2,1fr);max-width:720px;">
+    <div class="char-card" style="cursor:default;">
+      <div class="char-icon">🏆</div>
+      <div class="char-name" style="font-size:clamp(15px,2vw,24px);">2012년 대회</div>
+      <div class="char-actor" style="font-size:clamp(12px,1.5vw,17px);color:rgba(255,255,255,.7);margin-top:4px;">제37회 대한농구협회장기 전국 고교농구대회. 부산중앙고는 이 대회에서 준우승의 기적을 이루었다.</div>
+    </div>
+    <div class="char-card" style="cursor:default;">
+      <div class="char-icon">🎤</div>
+      <div class="char-name" style="font-size:clamp(15px,2vw,24px);">강양현 코치</div>
+      <div class="char-actor" style="font-size:clamp(12px,1.5vw,17px);color:rgba(255,255,255,.7);margin-top:4px;">현재 3×3 농구 국가대표 코치로 활동 중. 여전히 농구 현장을 지키고 있다.</div>
+    </div>
+    <div class="char-card" style="cursor:default;">
+      <div class="char-icon">🌟</div>
+      <div class="char-name" style="font-size:clamp(15px,2vw,24px);">천기범 선수</div>
+      <div class="char-actor" style="font-size:clamp(12px,1.5vw,17px);color:rgba(255,255,255,.7);margin-top:4px;">서울 삼성 썬더스에서 프로 활약. 실제 주인공 중 유일하게 프로 선수로 성장.</div>
+    </div>
+    <div class="char-card" style="cursor:default;">
+      <div class="char-icon">🎬</div>
+      <div class="char-name" style="font-size:clamp(15px,2vw,24px);">영화 촬영</div>
+      <div class="char-actor" style="font-size:clamp(12px,1.5vw,17px);color:rgba(255,255,255,.7);margin-top:4px;">2022년 4~7월 촬영. 실제 부산중앙고에서 촬영하여 선수들의 헤어스타일까지 재현.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 18. 마무리 ══ -->
+<section class="slide bg20">
+  <div class="dc dc1"></div><div class="dc dc2"></div><div class="dc dc3"></div>
+  <div class="endicon">🏀</div>
+  <div class="endtitle">중꺾마!</div>
+  <div class="endsub">
+    <b style="color:#ffd93d;">중요한 건 꺾이지 않는 마음</b><br><br>
+    여러분의 삶에서도 언제나<br>
+    <span style="color:#6bcb77;font-weight:900;">리바운드</span>할 기회는 있습니다 ✨<br><br>
+    <span style="font-size:clamp(12px,1.5vw,18px);color:rgba(255,255,255,.5);">
+      감독 장항준 · 2023 · 부산중앙고 농구부 실화 기반
+    </span>
+  </div>
+</section>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const pb = document.getElementById('pb');
+const snumEl = document.getElementById('snum');
+const dotsWrap = document.getElementById('dots');
+let cur = 0;
+const N = slides.length;
+
+for(let i=0;i<N;i++){
+  const d=document.createElement('span');
+  d.className='dot'+(i===0?' on':'');
+  d.onclick=()=>go2(i);
+  dotsWrap.appendChild(d);
+}
+function updateUI(){
+  pb.style.width=((cur+1)/N*100)+'%';
+  snumEl.textContent=(cur+1)+' / '+N;
+  dotsWrap.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+function go2(i){
+  if(i===cur)return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('prev');
+  cur=i;
+  slides.forEach((s,j)=>{
+    s.classList.remove('active','prev');
+    if(j===cur)s.classList.add('active');
+    else if(j<cur)s.classList.add('prev');
+  });
+  updateUI();
+}
+function go(dir){ go2((cur+dir+N)%N); }
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+});
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{
+  const d=tx-e.changedTouches[0].clientX;
+  if(Math.abs(d)>50)go(d>0?1:-1);
+},{passive:true});
+
+updateUI();
+
+/* ── 빈칸 채우기 ── */
+function pickBlank(slotId,el,text,isCorrect,group){
+  const parent=el.closest('.blankitem');
+  parent.querySelectorAll('.atag').forEach(t=>{
+    if((t.getAttribute('onclick')||'').includes("'"+group+"'"))
+      t.classList.remove('picked','wrong');
+  });
+  el.classList.add(isCorrect?'picked':'wrong');
+  const slot=document.getElementById(slotId);
+  slot.textContent=text;
+  slot.classList.toggle('revealed',isCorrect);
+}
+
+/* ── OX 퀴즈 ── */
+function doOX(btn,num,picked,correct){
+  const box=btn.closest('.oxitem');
+  box.querySelectorAll('.oxbtn').forEach(b=>b.classList.remove('correct','wrong2'));
+  btn.classList.add(picked===correct?'correct':'wrong2');
+  const exp=document.getElementById('ox'+num+'e');
+  if(exp)exp.classList.add('show');
+}
+
+/* ── 규칙 퀴즈 ── */
+function pickRule(el,text,isCorrect,group){
+  const parent=el.closest('.rcard');
+  parent.querySelectorAll('.rtag').forEach(t=>{
+    if((t.getAttribute('onclick')||'').includes("'"+group+"'"))
+      t.classList.remove('rans','rwrong');
+  });
+  el.classList.add(isCorrect?'rans':'rwrong');
+}
+
+/* ── 명대사 퀴즈 ── */
+function pickQ(el,isCorrect,group){
+  const parent=el.closest('.qcard');
+  parent.querySelectorAll('.qtag').forEach(t=>{
+    if((t.getAttribute('onclick')||'').includes("'"+group+"'"))
+      t.classList.remove('qans','qwrong');
+  });
+  el.classList.add(isCorrect?'qans':'qwrong');
+}
+
+/* ── 등장인물 특징 태그 (중복 토글) ── */
+function togChar(el){ el.classList.toggle('on'); }
+
+/* ── 인상 깊은 인물 (단일 선택) ── */
+function pickFav(el){
+  el.closest('.fav-tags').querySelectorAll('.fav-tag').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+/* ── 생각해봐요 (중복 토글) ── */
+function togTh(el){ el.classList.toggle('tson'); }
+
+/* ── 생각해봐요 (단일 선택) ── */
+function singleTh(el){
+  el.parentElement.querySelectorAll('.thtag').forEach(t=>t.classList.remove('tson'));
+  el.classList.add('tson');
+}
+
+/* ── 별점 ── */
+function doStar(rowId,n){
+  const row=document.getElementById(rowId);
+  row.querySelectorAll('.sbtn').forEach((s,i)=>{
+    if(i<n){s.classList.add('lit');s.textContent='★';}
+    else{s.classList.remove('lit');s.textContent='☆';}
+  });
+}
+</script>
+</body>
+</html>

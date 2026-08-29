@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>영화 1947 보스톤 활동지</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Serif KR',serif;background:#b8b8b8;color:#111;}
+
+.page{
+  width:210mm;
+  height:297mm;
+  overflow:hidden;
+  margin:0 auto 16px;
+  background:#fff;
+  padding:8mm 11mm 8mm;
+  display:flex;
+  flex-direction:column;
+  page-break-after:always;
+  page-break-inside:avoid;
+  box-shadow:0 3px 14px rgba(0,0,0,.22);
+}
+@media print{
+  body{background:#fff;margin:0;padding:0;}
+  .page{margin:0;box-shadow:none;
+    page-break-after:always;page-break-inside:avoid;
+    width:210mm;height:297mm;}
+  @page{size:A4 portrait;margin:0;}
+}
+
+.sec-title{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:14pt;font-weight:800;color:#111;
+  border-bottom:2.5px solid #444;
+  padding-bottom:3px;margin-bottom:5px;
+  letter-spacing:.05em;flex-shrink:0;
+}
+.sec-sub{
+  font-size:10pt;color:#444;
+  margin-bottom:4px;font-style:italic;flex-shrink:0;
+}
+.divider{width:100%;height:1px;background:#bbb;margin:5px 0;flex-shrink:0;}
+
+.chip{
+  font-size:9.5pt;background:#f0f0f0;
+  border:1px solid #aaa;border-radius:10px;
+  padding:2px 8px;color:#111;
+  display:inline-block;margin:2px 2px;
+  font-weight:600;
+}
+.blank{
+  display:inline-block;
+  border-bottom:2.5px solid #555;
+  border-radius:3px;padding:2px 5px;
+  font-weight:800;font-size:inherit;min-width:52px;
+}
+.blank-md{min-width:84px;}
+.blank-lg{min-width:106px;}
+
+.page-footer{
+  margin-top:auto;padding-top:4px;
+  border-top:1.5px solid #bbb;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:9pt;color:#777;flex-shrink:0;
+  font-weight:600;
+}
+.page-num{
+  width:22px;height:22px;border-radius:50%;
+  background:#333;color:#fff;
+  font-size:9pt;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ── PAGE 1 헤더 ── */
+.p1-header{
+  border:2px solid #aaa;border-radius:8px;
+  padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:5px;flex-shrink:0;
+}
+.p1-title{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:26pt;font-weight:800;color:#111;
+  letter-spacing:.2em;line-height:1;
+}
+.p1-sub{font-size:9.5pt;color:#444;letter-spacing:.18em;margin-top:3px;font-weight:600;}
+.p1-info{font-size:9pt;color:#555;text-align:right;line-height:1.8;font-weight:600;}
+.p1-info b{color:#111;font-weight:800;}
+
+.stu-bar{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;margin-bottom:5px;flex-shrink:0;
+}
+.stu-cell{
+  border:2px solid #bbb;border-radius:6px;
+  padding:7px 12px;display:flex;align-items:center;gap:8px;
+}
+.stu-label{font-weight:800;color:#111;font-size:12pt;white-space:nowrap;}
+.stu-line{flex:1;border-bottom:2px solid #888;height:18px;}
+
+/* 정의 박스 */
+.def-box{
+  border:2px solid #bbb;border-left:5px solid #666;
+  border-radius:6px;padding:8px 12px;
+  font-size:11.5pt;line-height:1.8;color:#111;font-weight:600;
+  margin-bottom:5px;flex-shrink:0;
+}
+
+/* 3요소 */
+.elem-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:6px;margin-bottom:5px;flex-shrink:0;
+}
+.elem-card{
+  border:2px solid #bbb;border-radius:6px;
+  padding:8px 7px;text-align:center;
+}
+.elem-icon{font-size:14pt;display:block;margin-bottom:3px;}
+.elem-name{font-size:11pt;font-weight:800;color:#111;margin-bottom:2px;}
+.elem-desc{font-size:9pt;color:#444;line-height:1.35;font-weight:600;}
+
+/* 용어표 */
+.term-table{width:100%;border-collapse:collapse;font-size:10.5pt;flex-shrink:0;}
+.term-table th{
+  background:#e8e8e8;color:#111;
+  padding:7px 9px;font-weight:800;
+  border:1.5px solid #aaa;font-size:10.5pt;
+}
+.term-table td{
+  padding:7px 9px;border:1.5px solid #bbb;
+  vertical-align:middle;line-height:1.5;font-size:10.5pt;font-weight:600;
+}
+.term-table tr:nth-child(even) td{background:#fafafa;}
+.term-key{font-weight:800;color:#111;text-align:center;width:90px;}
+
+/* 비교표 */
+.comp-wrap{
+  width:100%;border:2px solid #aaa;
+  border-radius:6px;overflow:hidden;
+  margin-bottom:5px;flex-shrink:0;
+}
+.comp-head{
+  display:grid;
+  grid-template-columns:90px 1fr 1fr;
+  background:#e8e8e8;
+  border-bottom:2px solid #aaa;
+}
+.comp-head-cell{
+  padding:8px 8px;text-align:center;
+  font-weight:800;font-size:11pt;color:#111;
+  white-space:nowrap;
+}
+.comp-head-cell:not(:last-child){border-right:1.5px solid #bbb;}
+.comp-row{
+  display:grid;
+  grid-template-columns:90px 1fr 1fr;
+  border-bottom:1.5px solid #ccc;
+}
+.comp-row:last-child{border-bottom:none;}
+.c-key{
+  padding:11px 8px;
+  font-weight:800;font-size:10.5pt;color:#111;
+  background:#f2f2f2;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;white-space:nowrap;
+  border-right:1.5px solid #ccc;
+}
+.c-ans{
+  padding:0 8px;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  min-height:38px;font-size:10.5pt;font-weight:600;color:#111;
+  text-align:center;
+}
+.c-ans:not(:last-child){border-right:1.5px solid #ccc;}
+
+/* ── PAGE 2 배역 ── */
+.char-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:7px;flex-shrink:0;
+}
+.char-card{
+  border-radius:6px;padding:9px 11px;
+  border:2px solid #bbb;border-left:4px solid #777;
+  display:flex;flex-direction:column;gap:4px;
+}
+.char-badge-sm{
+  font-size:8.5pt;padding:2px 8px;border-radius:10px;
+  font-weight:800;display:inline-block;align-self:flex-start;
+  border:1.5px solid #aaa;color:#222;margin-bottom:2px;
+  background:#f5f5f5;
+}
+.char-blank-name{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:13.5pt;font-weight:800;
+  display:inline-block;min-width:78px;
+  border-bottom:2.5px solid #444;
+  border-radius:3px;padding:1px 6px;color:#111;
+}
+.char-desc-sm{font-size:9.5pt;color:#111;line-height:1.55;font-weight:600;}
+.bogi-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+
+/* ── PAGE 3 줄거리 ── */
+.story-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;flex-shrink:0;
+}
+.story-card{
+  border-radius:6px;padding:9px 11px;
+  border:2px solid #bbb;border-left:4px solid #777;
+  display:flex;flex-direction:column;gap:4px;
+}
+.step-badge-sm{font-size:9pt;color:#444;font-weight:800;letter-spacing:.05em;}
+.scene-blank{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:12pt;font-weight:800;
+  display:inline-block;min-width:78px;
+  border-bottom:2.5px solid #444;
+  border-radius:3px;padding:1px 6px;color:#111;
+}
+.scene-body-sm{font-size:9.5pt;color:#111;line-height:1.55;font-weight:600;}
+
+/* 순서배열 */
+.ord-table{width:100%;border-collapse:collapse;font-size:10.5pt;flex-shrink:0;}
+.ord-table th{
+  background:#e8e8e8;color:#111;
+  padding:8px 9px;font-weight:800;
+  text-align:center;border:1.5px solid #aaa;font-size:10.5pt;
+}
+.ord-table td{
+  padding:9px 10px;border:1.5px solid #bbb;
+  vertical-align:middle;line-height:1.5;font-size:10.5pt;font-weight:600;
+}
+.ord-table tr:nth-child(even) td{background:#fafafa;}
+.ord-num-cell{
+  width:96px;text-align:center;
+  font-size:11pt;font-weight:800;color:#111;
+  white-space:nowrap;
+}
+
+/* ── PAGE 4 OST ── */
+.number-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:7px;flex-shrink:0;margin-bottom:6px;
+}
+.number-card{
+  border-radius:6px;padding:11px 12px;
+  border:2px solid #bbb;border-left:4px solid #777;
+  display:flex;flex-direction:column;gap:5px;
+}
+.num-badge{font-size:9pt;color:#444;font-weight:800;letter-spacing:.08em;}
+.num-icon{font-size:14pt;}
+.num-title{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:13pt;font-weight:800;color:#111;line-height:1.2;
+}
+.num-desc{font-size:9.5pt;color:#111;line-height:1.55;font-weight:600;}
+.num-q{font-size:9.5pt;color:#111;font-weight:800;margin-top:4px;}
+.write-lines{display:flex;flex-direction:column;gap:10px;margin-top:5px;}
+.wline{border-bottom:1.5px solid #aaa;height:20px;}
+
+/* 감상문 */
+.essay-box{
+  border:2px solid #bbb;border-left:4px solid #777;
+  border-radius:6px;padding:9px 13px;
+  flex-shrink:0;margin-bottom:6px;
+}
+.essay-q-sm{
+  font-size:11pt;font-weight:800;color:#111;
+  line-height:1.65;margin-bottom:7px;
+}
+.essay-q-sm em{color:#111;font-style:normal;font-weight:800;}
+.write-block{border:1.5px solid #bbb;border-radius:5px;padding:6px 10px;}
+.wl{border-bottom:1.5px solid #bbb;height:23px;}
+
+/* 역사 타임라인 */
+.timeline{display:flex;flex-direction:column;gap:5px;flex-shrink:0;margin-bottom:5px;}
+.tl-row{
+  display:grid;grid-template-columns:80px 18px 1fr;
+  align-items:center;gap:6px;
+}
+.tl-year{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:11pt;font-weight:800;color:#111;
+  text-align:right;white-space:nowrap;
+}
+.tl-dot{
+  width:14px;height:14px;border-radius:50%;
+  background:#555;border:2px solid #999;
+  flex-shrink:0;
+}
+.tl-content{
+  border:1.5px solid #ccc;border-radius:5px;
+  padding:5px 10px;font-size:10pt;font-weight:600;
+  color:#111;line-height:1.4;background:#fafafa;
+}
+.tl-content b{font-weight:800;color:#111;}
+</style>
+</head>
+<body>
+
+<!-- ══════════ PAGE 1 ══════════ -->
+<div class="page">
+
+  <div class="p1-header">
+    <div>
+      <div class="p1-title">1947 보스톤</div>
+      <div class="p1-sub">FILM · ROAD TO BOSTON · 활동지</div>
+    </div>
+    <div class="p1-info">
+      개봉 <b>2023</b>년 &nbsp;·&nbsp; 감독 <b>강제규</b><br/>
+      주연 <b>하정우 · 임시완 · 배성우</b><br/>
+      광복 후 태극기를 달고 달린 마라토너들의 실화
+    </div>
+  </div>
+
+  <div class="stu-bar">
+    <div class="stu-cell">
+      <span class="stu-label">학&nbsp;&nbsp;&nbsp;번</span>
+      <div class="stu-line"></div>
+    </div>
+    <div class="stu-cell">
+      <span class="stu-label">이&nbsp;&nbsp;&nbsp;름</span>
+      <div class="stu-line"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ① 영화 소개 -->
+  <div class="sec-title">① 영화 소개 — 어떤 이야기인가요?</div>
+  <div class="def-box">
+    <strong>1947 보스톤</strong>은 광복 이후 처음으로
+    <span class="blank blank-lg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>을 달고
+    국제 무대에 출전한 대한민국 마라토너들의
+    <span class="blank blank-lg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>입니다.
+  </div>
+  <div class="elem-grid">
+    <div class="elem-card">
+      <span class="elem-icon">🏃</span>
+      <div class="elem-name"><span class="blank blank-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="elem-desc">1936 베를린 올림픽 마라톤 금메달리스트 · 코치</div>
+    </div>
+    <div class="elem-card">
+      <span class="elem-icon">🥇</span>
+      <div class="elem-name"><span class="blank blank-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="elem-desc">1947 보스톤 마라톤 우승 · 세계신기록 수립</div>
+    </div>
+    <div class="elem-card">
+      <span class="elem-icon">🎽</span>
+      <div class="elem-name"><span class="blank blank-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="elem-desc">1936 베를린 올림픽 마라톤 동메달리스트 · 코치</div>
+    </div>
+  </div>
+  <div class="sec-sub">
+    📌 보기 :
+    <span class="chip">태극기</span>
+    <span class="chip">실화</span>
+    <span class="chip">손기정</span>
+    <span class="chip">서윤복</span>
+    <span class="chip">남승룡</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 역사적 배경 타임라인 -->
+  <div class="sec-title">역사적 배경 — 시간순으로 살펴보기</div>
+  <div class="timeline">
+    <div class="tl-row">
+      <div class="tl-year">1936년</div>
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        손기정, 베를린 올림픽 마라톤에서 세계 신기록으로 <b>금메달</b> 획득.<br/>
+        그러나 <b>일장기</b>를 가슴에 달고 <b>'손 기테이'</b>라는 일본 이름으로 시상대에 서야 했음.
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">1945년</div>
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <b>광복</b>. 그러나 베를린 올림픽 기록은 여전히 일본에 귀속.<br/>
+        국제 사회에서 독립 국가로 인정받지 못한 <b>미군정</b> 시기 시작.
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">1947년</div>
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        제51회 보스턴 마라톤 대회. 서윤복 선수 <b>2시간 25분 39초</b>로 우승 및 세계 신기록 수립.<br/>
+        <b>태극기</b>를 달고 출전한 대한민국의 <b>첫 국제 스포츠 우승</b>.
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ② 영화 vs 역사적 사실 비교 -->
+  <div class="sec-title">② 영화 속 내용 vs 역사적 사실 비교</div>
+  <div class="sec-sub">빈칸에 알맞은 말을 보기에서 골라 쓰세요.</div>
+  <div class="comp-wrap">
+    <div class="comp-head">
+      <div class="comp-head-cell">비교 항목</div>
+      <div class="comp-head-cell">🎬 영화 속 내용</div>
+      <div class="comp-head-cell">📜 역사적 사실</div>
+    </div>
+    <div class="comp-row">
+      <div class="c-key">미 군정청</div>
+      <div class="c-ans"></div>
+      <div class="c-ans"></div>
+    </div>
+    <div class="comp-row">
+      <div class="c-key">유니폼</div>
+      <div class="c-ans"></div>
+      <div class="c-ans"></div>
+    </div>
+    <div class="comp-row">
+      <div class="c-key">귀국 방법</div>
+      <div class="c-ans"></div>
+      <div class="c-ans"></div>
+    </div>
+  </div>
+  <div class="sec-sub">
+    📌 보기 :
+    <span class="chip">출전 반대·국민 성금</span>
+    <span class="chip">미국인들이 실제 지원</span>
+    <span class="chip">성조기 강요·갈등 묘사</span>
+    <span class="chip">태극기+성조기 함께 착용</span>
+    <span class="chip">비행기로 귀국</span>
+    <span class="chip">화물선으로 귀국</span>
+  </div>
+
+  <div class="page-footer">
+    <span>🏃 1947 보스톤 활동지</span>
+    <div style="display:flex;align-items:center;gap:5px;">
+      <span>① 영화 소개 · 역사 배경 · ② 비교</span>
+      <div class="page-num">1</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 2 ══════════ -->
+<div class="page">
+
+  <div class="sec-title">③ 주요 등장인물</div>
+  <div class="sec-sub">빈칸에 인물 이름을 보기에서 골라 쓰세요.</div>
+  <div class="char-grid">
+
+    <div class="char-card">
+      <span class="char-badge-sm">주인공 · 배우 하정우</span>
+      <div><span class="char-blank-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        1936년 베를린 올림픽 마라톤 <strong>금메달리스트</strong>.<br/>
+        일장기를 가리다 선수권을 박탈당함.<br/>
+        광복 후 서윤복을 발굴해 <strong>보스톤 출전</strong>을 이끈 코치.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">손기정</span><span class="chip">서윤복</span>
+        <span class="chip">남승룡</span><span class="chip">백남현(백남용)</span>
+        <span class="chip">스미들리</span><span class="chip">이길용</span>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <span class="char-badge-sm">주인공 · 배우 임시완</span>
+      <div><span class="char-blank-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        손기정에게 발탁된 <strong>유망주 마라토너</strong>.<br/>
+        생활고로 운동을 포기할 위기를 극복하고<br/>
+        보스톤 마라톤에서 <strong>세계 신기록</strong>으로 우승.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">서윤복</span><span class="chip">손기정</span>
+        <span class="chip">남승룡</span><span class="chip">이길용</span>
+        <span class="chip">백남현(백남용)</span><span class="chip">스미들리</span>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <span class="char-badge-sm">조연 · 배우 배성우</span>
+      <div><span class="char-blank-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        1936년 베를린 올림픽 마라톤 <strong>동메달리스트</strong>.<br/>
+        손기정의 오랜 동료이자 친구.<br/>
+        서윤복의 <strong>보조 코치</strong>로 함께 훈련을 지도.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">남승룡</span><span class="chip">손기정</span>
+        <span class="chip">서윤복</span><span class="chip">백남현(백남용)</span>
+        <span class="chip">이길용</span><span class="chip">스미들리</span>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <span class="char-badge-sm">조연 · 배우 김상호</span>
+      <div><span class="char-blank-name" style="font-size:11pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        미국 보스톤에 거주하는 <strong>재미 교포 사업가</strong>.<br/>
+        서윤복 일행의 <strong>재정보증인</strong>이 되어<br/>
+        출전을 가능하게 한 숨은 조력자.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">백남현(백남용)</span><span class="chip">손기정</span>
+        <span class="chip">서윤복</span><span class="chip">남승룡</span>
+        <span class="chip">스미들리</span><span class="chip">이길용</span>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <span class="char-badge-sm">조연 · 미 군정청 체육담당관</span>
+      <div><span class="char-blank-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        미 군정청의 <strong>체육담당관</strong>으로<br/>
+        선수단의 출전을 돕기 위해 애쓴 인물.<br/>
+        실제 역사에서 <strong>손기정의 손을 잡고</strong> 군정사령관에게 지원을 요청.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">스미들리</span><span class="chip">백남현(백남용)</span>
+        <span class="chip">손기정</span><span class="chip">이길용</span>
+        <span class="chip">서윤복</span><span class="chip">남승룡</span>
+      </div>
+    </div>
+
+    <div class="char-card">
+      <span class="char-badge-sm">조연 · 배우 최규환</span>
+      <div><span class="char-blank-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="char-desc-sm">
+        1936년 베를린 올림픽 당시<br/>
+        손기정의 <strong>일장기 말소 사건</strong>을 보도한<br/>
+        동아일보 <strong>기자</strong> 출신 인물.
+      </div>
+      <div class="bogi-chips">
+        <span class="chip">이길용</span><span class="chip">스미들리</span>
+        <span class="chip">남승룡</span><span class="chip">백남현(백남용)</span>
+        <span class="chip">서윤복</span><span class="chip">손기정</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <span>🏃 1947 보스톤 활동지</span>
+    <div style="display:flex;align-items:center;gap:5px;">
+      <span>③ 주요 등장인물</span>
+      <div class="page-num">2</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 3 ══════════ -->
+<div class="page">
+
+  <div class="sec-title">④ 줄거리</div>
+  <div class="sec-sub">각 장면의 이름을 보기에서 골라 빈칸에 쓰세요.</div>
+  <div class="story-grid" style="margin-bottom:5px;">
+
+    <div class="story-card">
+      <div class="step-badge-sm">① 첫 번째 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        1936년 베를린 올림픽 마라톤.<br/>
+        손기정이 세계 신기록으로 우승하지만<br/>
+        <strong>일본 국적 '손 기테이'</strong>로 기록되어 일장기를 달아야 했다.
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="step-badge-sm">② 두 번째 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        광복 후 손기정이 냉면 배달을 하던<br/>
+        유망주 <strong>서윤복을 발굴</strong>하여<br/>
+        남승룡과 함께 훈련을 시작한다.
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="step-badge-sm">③ 세 번째 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        미 군정청의 재정보증 문제와<br/>
+        출전 서류를 해결하기 위해<br/>
+        <strong>재미 교포 백남용</strong>의 도움을 받으며 출국이 성사된다.
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="step-badge-sm">④ 네 번째 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        보스톤 현지에서 유니폼의<br/>
+        <strong>성조기 부착 문제</strong>로 갈등이 생기고,<br/>
+        선수단은 태극기를 지키기 위해 힘을 모은다.
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="step-badge-sm">⑤ 다섯 번째 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        <strong>1947년 4월 19일</strong>,<br/>
+        제51회 보스턴 마라톤 대회.<br/>
+        서윤복이 <strong>2시간 25분 39초</strong>의 세계 신기록으로 결승선을 통과한다.
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="step-badge-sm">⑥ 마지막 장면</div>
+      <div><span class="scene-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="scene-body-sm">
+        시상대 위에서 울려 퍼지는 <strong>애국가</strong>.<br/>
+        가슴에 달린 <strong>태극기</strong>를 바라보며<br/>
+        손기정이 눈물을 흘리는 감동적인 장면.
+      </div>
+    </div>
+
+  </div>
+  <div class="sec-sub">
+    📌 보기 :
+    <span class="chip">베를린의 일장기</span>
+    <span class="chip">서윤복 발굴과 훈련</span>
+    <span class="chip">보스톤 출전 준비</span>
+    <span class="chip">유니폼 갈등</span>
+    <span class="chip">세계 신기록 우승</span>
+    <span class="chip">애국가와 태극기</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec-title">줄거리 순서 배열</div>
+  <div class="sec-sub">아래 사건을 일어난 순서대로 ( &nbsp;&nbsp;&nbsp; ) 안에 번호를 쓰세요.</div>
+  <table class="ord-table">
+    <thead>
+      <tr>
+        <th style="width:96px;text-align:center;">순서</th>
+        <th>사건 내용</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>서윤복이 2시간 25분 39초의 세계 신기록으로 보스톤 마라톤에서 우승한다</td>
+      </tr>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>손기정이 베를린 올림픽에서 일장기를 달고 금메달을 획득한다</td>
+      </tr>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>시상대에서 애국가가 울려 퍼지고 태극기를 바라보며 손기정이 눈물을 흘린다</td>
+      </tr>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>재미 교포 백남용의 도움으로 재정보증 문제를 해결하고 출국이 성사된다</td>
+      </tr>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>손기정이 서윤복을 발굴하여 남승룡과 함께 훈련을 시작한다</td>
+      </tr>
+      <tr>
+        <td class="ord-num-cell">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</td>
+        <td>유니폼의 성조기 부착 문제로 갈등이 생기고 태극기를 지키기 위해 힘을 모은다</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="sec-sub" style="margin-top:4px;">📌 정답은 ① ~ ⑥ 중 알맞은 숫자를 쓰세요.</div>
+
+  <div class="page-footer">
+    <span>🏃 1947 보스톤 활동지</span>
+    <div style="display:flex;align-items:center;gap:5px;">
+      <span>④ 줄거리 · 순서 배열</span>
+      <div class="page-num">3</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ PAGE 4 ══════════ -->
+<div class="page">
+
+  <div class="sec-title">⑤ 주요 장면 OST 감상</div>
+  <div class="sec-sub">각 음악을 감상하고 느낀 점을 써 보세요. (음악 감독: 이동준)</div>
+  <div class="number-grid" style="gap:5px;margin-bottom:4px;">
+
+    <div class="number-card" style="padding:8px 10px;gap:3px;">
+      <div class="num-badge">OST ①</div>
+      <div class="num-icon" style="font-size:12pt;">🎵</div>
+      <div class="num-title" style="font-size:11pt;">Prologue /<br/>1947 Road To Boston</div>
+      <div class="num-desc" style="font-size:9pt;">
+        영화의 시작과 마지막을 장식하는<br/>
+        <strong>웅장한 오케스트라</strong> 테마곡.<br/>
+        달리는 마라토너의 숨결을 표현.
+      </div>
+      <div class="num-q" style="font-size:9pt;margin-top:2px;">Q. 느낀 점을 써 보세요.</div>
+      <div class="write-lines" style="gap:8px;margin-top:3px;">
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+      </div>
+    </div>
+
+    <div class="number-card" style="padding:8px 10px;gap:3px;">
+      <div class="num-badge">OST ②</div>
+      <div class="num-icon" style="font-size:12pt;">🏅</div>
+      <div class="num-title" style="font-size:11pt;">Our Heroes /<br/>영웅들의 귀환</div>
+      <div class="num-desc" style="font-size:9pt;">
+        우승 후 귀환하는 장면에 흐르는<br/>
+        <strong>감동적인 현악</strong> 주제곡.<br/>
+        조국을 위한 헌신을 담은 선율.
+      </div>
+      <div class="num-q" style="font-size:9pt;margin-top:2px;">Q. 느낀 점을 써 보세요.</div>
+      <div class="write-lines" style="gap:8px;margin-top:3px;">
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+      </div>
+    </div>
+
+    <div class="number-card" style="padding:8px 10px;gap:3px;">
+      <div class="num-badge">OST ③</div>
+      <div class="num-icon" style="font-size:12pt;">😢</div>
+      <div class="num-title" style="font-size:11pt;">Tears Of Joy /<br/>눈물의 의미</div>
+      <div class="num-desc" style="font-size:9pt;">
+        시상대 위 손기정의 눈물 장면에<br/>
+        <strong>피아노와 현악</strong>이 어우러지는<br/>
+        영화 최고의 감동 클라이맥스.
+      </div>
+      <div class="num-q" style="font-size:9pt;margin-top:2px;">Q. 느낀 점을 써 보세요.</div>
+      <div class="write-lines" style="gap:8px;margin-top:3px;">
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+        <div class="wline"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider" style="margin:4px 0;"></div>
+
+  <div class="sec-title">⑥ 감상문 쓰기</div>
+
+  <div class="essay-box" style="padding:7px 13px;margin-bottom:4px;">
+    <div class="essay-q-sm" style="font-size:10.5pt;margin-bottom:5px;">
+      <em>Q1</em>&nbsp; 가장 인상 깊었던 장면이나 인물은 누구인가요? 그 이유도 써 보세요.
+    </div>
+    <div class="write-block" style="padding:4px 10px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="essay-box" style="padding:7px 13px;margin-bottom:4px;">
+    <div class="essay-q-sm" style="font-size:10.5pt;margin-bottom:5px;">
+      <em>Q2</em>&nbsp; "우리는 우리 이름으로 못 뛰었으니까, 애들은 <em>자기 이름으로</em> 뛰게끔 해줘야지."<br/>
+      이 대사가 오늘날 우리에게 주는 의미는 무엇인지 써 보세요.
+    </div>
+    <div class="write-block" style="padding:4px 10px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+        <div class="wl"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>🏃 1947 보스톤 활동지</span>
+    <div style="display:flex;align-items:center;gap:5px;">
+      <span>⑤ OST 감상 · ⑥ 감상문</span>
+      <div class="page-num">4</div>
+    </div>
+  </div>
+</div>
